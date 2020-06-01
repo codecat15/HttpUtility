@@ -36,10 +36,11 @@ struct HttpUtility
                     _=completionHandler(result)
                 }
                 catch let error{
-                    debugPrint("error occured while decoding = \(error.localizedDescription)")
+                    debugPrint("error occured while decoding = \(error)")
                 }
+            }else{
+                _=completionHandler(nil) //todo: you need to send error that you receive from server
             }
-            _=completionHandler(nil) //todo: you need to send error that you receive from server
 
         }.resume()
     }
@@ -64,8 +65,10 @@ struct HttpUtility
                 catch let decodingError {
                     debugPrint(decodingError)
                 }
+            }else{
+                _=completionHandler(nil) //todo: you need to send error that you receive from server
             }
-            _=completionHandler(nil) //todo: you need to send error that you receive from server
+
             
         }.resume()
     }
