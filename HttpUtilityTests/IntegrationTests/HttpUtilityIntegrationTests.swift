@@ -14,14 +14,6 @@ class HttpUtilityIntegrationTests: XCTestCase {
     private typealias Employees = [EmployeeResponse]
     private let _utility = HttpUtility()
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func test_getApiData_With_Valid_Request_Returns_Success()
     {
         // ARRANGE
@@ -55,12 +47,4 @@ class HttpUtilityIntegrationTests: XCTestCase {
 
         wait(for: [expectation], timeout: 10.0)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
