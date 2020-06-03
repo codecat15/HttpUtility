@@ -23,9 +23,20 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ACT
         _utility.getApiData(requestUrl: requestUrl!, resultType: Employees.self) { (response) in
 
-            // ASSERT
-            XCTAssertNotNil(response)
-            XCTAssertTrue(response?.count == 2)
+            switch response
+            {
+            case .success(let employee):
+
+                // ASSERT
+                XCTAssertNotNil(employee)
+                XCTAssertTrue(employee?.count == 2)
+
+            case .failure(let error):
+
+                // ASSERT
+                XCTAssertNil(error)
+            }
+
             expectation.fulfill()
         }
 
@@ -41,10 +52,51 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Data received from server")
         // ACT
         _utility.postApiData(requestUrl: requestUrl!, requestBody: registerUserBody, resultType: RegisterResponse.self) { (response) in
-            XCTAssertNotNil(response)
+          switch response
+            {
+            case .success(let registerResponse):
+
+                // ASSERT
+                XCTAssertNotNil(registerResponse)
+
+            case .failure(let error):
+
+                // ASSERT
+                XCTAssertNil(error)
+            }
             expectation.fulfill()
         }
 
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func test_getApiData_WithQueryItem_Returns_Collection()
+    {
+        // ARRANGE
+        let expectation = XCTestExpectation(description: "Data received from server")
+        let request = PhoneRequest(color: "Red", manufacturer: nil)
+        let requestUrl = request.convertToQueryStringUrl(urlString:"https://api-dev-scus-demo.azurewebsites.net/api/Product/GetSmartPhone")
+
+        // ACT
+        _utility.getApiData(requestUrl: requestUrl!, resultType: PhoneResponse.self) { (response) in
+
+            switch response
+            {
+            case .success(let phoneResponse):
+
+                // ASSERT
+                XCTAssertNotNil(phoneResponse)
+                phoneResponse?.data?.forEach({ (phone) in
+                    XCTAssertEqual(request.color,phone.color)
+                })
+
+            case .failure(let error):
+                XCTAssertNil(error)
+            }
+            expectation.fulfill()
+
+        }
+        
         wait(for: [expectation], timeout: 10.0)
     }
 }

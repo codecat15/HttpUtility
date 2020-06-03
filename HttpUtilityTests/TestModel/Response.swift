@@ -23,19 +23,6 @@ struct EmployeeResponse: Decodable {
     }
 }
 
-// MARK: - RegisterUserRequest
-struct RegisterUserRequest: Encodable
-{
-    let firstName, lastName, email, password: String
-
-    enum CodingKeys: String, CodingKey {
-        case firstName = "First_Name"
-        case lastName = "Last_Name"
-        case email = "Email"
-        case password = "Password"
-    }
-}
-
 // MARK: - RegisterResponse
 struct RegisterResponse: Codable {
     let errorMessage: String?
@@ -45,4 +32,15 @@ struct RegisterResponse: Codable {
 // MARK: - EmployeeRegisterResponse
 struct EmployeeRegisterResponse: Codable {
     let name, email, id, joining: String?
+}
+
+// MARK: - PhoneResponse
+struct PhoneResponse: Decodable {
+    let errorMessage: String?
+    let data: [Phone]?
+}
+
+// MARK: - Phone
+struct Phone: Decodable {
+    let name, operatingSystem, manufacturer, color: String?
 }

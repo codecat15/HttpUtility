@@ -18,58 +18,113 @@ struct HttpHeaderFields
     static let contentType = "content-type"
 }
 
+struct NetworkError : Error
+{
+    let reason: String?
+}
+
 struct HttpUtility
 {
-    func getApiData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(_ result: T?)-> Void)
+    private var _token: String? = nil
+    private var _dateFormatter: DateFormatter? = nil
+
+    init(token: String?){
+        _token = token
+    }
+
+    init(dateFormatter: DateFormatter){
+        _dateFormatter = dateFormatter
+    }
+
+    init(token: String, dateFormatter: DateFormatter)
     {
-        //todo: move this to a common function
-        // need a date formatter to format the date response received
-        // use url components for query string
+        _token = token
+        _dateFormatter = dateFormatter
+    }
+
+    init(){}
+
+    func getApiData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    {
+
+        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        urlRequest.httpMethod = HttpMethodType.GET
+
         URLSession.shared.dataTask(with: requestUrl) { (responseData, httpUrlResponse, error) in
 
             if(error == nil && responseData != nil && responseData?.count != 0)
             {
-                //parse the responseData here
-                let decoder = JSONDecoder()
-                do {
+                let decoder = self.createJsonDecoder()
+                do
+                {
                     let result = try decoder.decode(T.self, from: responseData!)
-                    _=completionHandler(result)
+                    completionHandler(.success(result))
                 }
-                catch let error{
-                    debugPrint("error occured while decoding = \(error)")
+                catch let error
+                {
+                    debugPrint(error)
+                    completionHandler(.failure(NetworkError(reason: error.localizedDescription)))
                 }
-            }else{
-                _=completionHandler(nil) //todo: you need to send error that you receive from server
+            }
+            else
+            {
+                let error = NetworkError(reason: error.debugDescription)
+                completionHandler(.failure(error))
             }
 
         }.resume()
     }
 
-    func postApiData<T:Decodable>(requestUrl: URL, requestBody: Data, resultType: T.Type, completionHandler:@escaping(_ result: T?)-> Void)
+    // MARK: - Post Api
+    func postApiData<T:Decodable>(requestUrl: URL, requestBody: Data, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
     {
-        //todo: make this for posting multi-part form data
-        var urlRequest = URLRequest(url: requestUrl)
+        var urlRequest = createUrlRequest(requestUrl: requestUrl)
         urlRequest.httpMethod = HttpMethodType.POST
         urlRequest.httpBody = requestBody
         urlRequest.addValue("application/json", forHTTPHeaderField: HttpHeaderFields.contentType)
 
         URLSession.shared.dataTask(with: urlRequest) { (data, httpUrlResponse, error) in
 
-            if(data != nil && data?.count != 0)
+            if(error == nil && data != nil && data?.count != 0)
             {
                 do {
 
-                    let response = try JSONDecoder().decode(T.self, from: data!)
-                    _=completionHandler(response)
+                    let decoder = self.createJsonDecoder()
+                    let response = try decoder.decode(T.self, from: data!)
+                    completionHandler(.success(response))
                 }
-                catch let decodingError {
+                catch let decodingError
+                {
                     debugPrint(decodingError)
+                    let networkError = NetworkError(reason: decodingError.localizedDescription)
+                    completionHandler(.failure(networkError))
                 }
-            }else{
-                _=completionHandler(nil) //todo: you need to send error that you receive from server
+            }
+            else
+            {
+                let error = NetworkError(reason: error.debugDescription)
+                completionHandler(.failure(error))
             }
 
-            
         }.resume()
+    }
+
+    // MARK: - Private functions
+    private func createJsonDecoder() -> JSONDecoder
+    {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = _dateFormatter != nil ? .formatted(_dateFormatter!) : .iso8601
+        return decoder
+    }
+
+    private func createUrlRequest(requestUrl: URL) -> URLRequest
+    {
+        var urlRequest = URLRequest(url: requestUrl)
+        if(_token != nil)
+        {
+            urlRequest.addValue(_token!, forHTTPHeaderField: "authorization")
+        }
+
+        return urlRequest
     }
 }

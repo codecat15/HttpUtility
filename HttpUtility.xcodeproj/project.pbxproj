@@ -14,6 +14,7 @@
 		86719EA024720BD1002A2AB0 /* HttpUtility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86719E9624720BD1002A2AB0 /* HttpUtility.framework */; };
 		86719EA724720BD1002A2AB0 /* HttpUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 86719E9924720BD1002A2AB0 /* HttpUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		86719EB124720E40002A2AB0 /* HttpUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86719EB024720E40002A2AB0 /* HttpUtility.swift */; };
+		86E9B56424883E9100B78521 /* Requests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E9B56324883E9100B78521 /* Requests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		86719E9F24720BD1002A2AB0 /* HttpUtilityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HttpUtilityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		86719EA624720BD1002A2AB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86719EB024720E40002A2AB0 /* HttpUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpUtility.swift; sourceTree = "<group>"; };
+		86E9B56324883E9100B78521 /* Requests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Requests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				8656BC60248495700023549D /* Response.swift */,
+				86E9B56324883E9100B78521 /* Requests.swift */,
 			);
 			path = TestModel;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8656BC61248495700023549D /* Response.swift in Sources */,
+				86E9B56424883E9100B78521 /* Requests.swift in Sources */,
 				8656BC5B2483E43D0023549D /* EncodableExtensionUnitTest.swift in Sources */,
 				8656BC5E2484313F0023549D /* HttpUtilityIntegrationTests.swift in Sources */,
 			);
