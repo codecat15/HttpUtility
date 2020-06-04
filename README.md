@@ -131,4 +131,4 @@ let utility = HttpUtility(token: "your_token", decoder: customJsonDecoder)
 
 ```
 
-This utility is for performing basic tasks, and is currently evolving, 
+This utility is for performing basic tasks, and is currently evolving, but if you have any specific feature in mind then please feel free to drop a request and I will try my best to implement it
