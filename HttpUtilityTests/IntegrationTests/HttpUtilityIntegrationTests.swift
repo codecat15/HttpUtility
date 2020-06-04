@@ -21,7 +21,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Data received from server")
 
         // ACT
-        _utility.getApiData(requestUrl: requestUrl!, resultType: Employees.self) { (response) in
+        _utility.getData(requestUrl: requestUrl!, resultType: Employees.self) { (response) in
 
             switch response
             {
@@ -51,8 +51,8 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let registerUserBody = try! JSONEncoder().encode(registerUserRequest)
         let expectation = XCTestExpectation(description: "Data received from server")
         // ACT
-        _utility.postApiData(requestUrl: requestUrl!, requestBody: registerUserBody, resultType: RegisterResponse.self) { (response) in
-          switch response
+        _utility.postData(requestUrl: requestUrl!, requestBody: registerUserBody, resultType: RegisterResponse.self) { (response) in
+            switch response
             {
             case .success(let registerResponse):
 
@@ -78,7 +78,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let requestUrl = request.convertToQueryStringUrl(urlString:"https://api-dev-scus-demo.azurewebsites.net/api/Product/GetSmartPhone")
 
         // ACT
-        _utility.getApiData(requestUrl: requestUrl!, resultType: PhoneResponse.self) { (response) in
+        _utility.getData(requestUrl: requestUrl!, resultType: PhoneResponse.self) { (response) in
 
             switch response
             {

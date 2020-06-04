@@ -13,7 +13,7 @@ class EncodableExtensionUnitTest: XCTestCase {
 
     private let exampleUrl = "https://www.example.com"
 
-    func test_convertToQueryStringUrl_With_SimpleStructure_Returuns_URLQueryItemCollection()
+    func test_convertToQueryStringUrl_With_SimpleStructure_Returuns_QueryStringUrl()
     {
         // ARRANGE
         struct Simple : Encodable {let name, description: String}
@@ -26,7 +26,7 @@ class EncodableExtensionUnitTest: XCTestCase {
         XCTAssertNotNil(result)
     }
 
-    func test_convertToQueryStringUrl_With_IntegerValue_Returuns_URLQueryItemCollection()
+    func test_convertToQueryStringUrl_With_IntegerValue_Returuns_QueryStringUrl()
     {
         // ARRANGE
         struct simple : Encodable {
@@ -41,9 +41,13 @@ class EncodableExtensionUnitTest: XCTestCase {
 
         // ASSERT
         XCTAssertNotNil(result)
+        XCTAssertTrue(result!.absoluteString.contains("name=\(objSimple.name)"))
+        XCTAssertTrue(result!.absoluteString.contains("id=\(objSimple.id)"))
+
     }
 
-    func test_convertToQueryStringUrl_With_array_Returuns_URLQueryItemCollection()
+    //todo: need to test arrays
+    func test_convertToQueryStringUrl_With_array_Returuns_QueryStringUrl()
     {
         // ARRANGE
         struct simple : Encodable {
@@ -58,9 +62,10 @@ class EncodableExtensionUnitTest: XCTestCase {
 
         // ASSERT
         XCTAssertNotNil(result)
+        XCTAssertTrue(result!.absoluteString.contains("name=\(objSimple.name)"))
     }
 
-    func test_convertToQueryStringUrl_With_Multiple_DataType_Returuns_URLQueryItemCollection()
+    func test_convertToQueryStringUrl_With_Multiple_DataType_Returuns_QueryStringUrl()
     {
         // ARRANGE
         struct simple : Encodable {
@@ -77,21 +82,9 @@ class EncodableExtensionUnitTest: XCTestCase {
 
         // ASSERT
         XCTAssertNotNil(result)
-    }
-
-    // MARK: - convert to multipart form data
-    //todo: need to write more solid test
-    func test_convertToMultiPartFormData_Returns_Valid_MultiFormData()
-    {
-        // ARRANGE
-        let request = MultiPartFormRequest(name: UUID().uuidString, lastName: UUID().uuidString, dateOfJoining: UUID().uuidString, dateOfBirth: UUID().uuidString, gender: UUID().uuidString, departmentName: UUID().uuidString, managerName: UUID().uuidString)
-
-         let boundary = "---------------------------------\(UUID().uuidString)"
-
-        // ACT
-        let formData = request.convertToMultiPartFormData(boundary: boundary)
-
-        // ASSERT
-        XCTAssertNotNil(formData)
+        XCTAssertTrue(result!.absoluteString.contains("name=\(objSimple.name)"))
+        XCTAssertTrue(result!.absoluteString.contains("id=\(objSimple.id)"))
+        XCTAssertTrue(result!.absoluteString.contains("salary=25000"))
+        XCTAssertTrue(result!.absoluteString.contains("isOnContract=0"))
     }
 }

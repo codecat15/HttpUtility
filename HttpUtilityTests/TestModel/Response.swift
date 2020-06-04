@@ -44,3 +44,14 @@ struct PhoneResponse: Decodable {
 struct Phone: Decodable {
     let name, operatingSystem, manufacturer, color: String?
 }
+
+// MARK: - MultiPartResponse
+struct MultiPartResponse: Decodable {
+    let errorMessage: String?
+    let data: MultipartMessage?
+}
+
+// MARK: - MultipartMessage
+struct MultipartMessage: Decodable {
+    let message: String?
+}

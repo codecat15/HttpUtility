@@ -30,7 +30,8 @@ struct PhoneRequest: Encodable
 
 struct MultiPartFormRequest: Encodable
 {
-    let name, lastName, dateOfJoining, dateOfBirth, gender, departmentName, managerName: String
+    let name, lastName, gender, departmentName, managerName: String
+    let dateOfJoining, dateOfBirth: String
 
     enum CodingKeys: String, CodingKey {
 
