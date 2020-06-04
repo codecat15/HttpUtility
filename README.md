@@ -25,7 +25,7 @@ Given are the some of the examples on how you can make use of this utility
 ```swift
 let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
         let utility = HTTPUtility()
-        utility.getData(requestUrl: requestUrl!, resultType: Employees.self) { (response) in
+        utility.request(requestUrl: requestUrl!, method: .get, resultType: Employees.self) { (response) in
             switch response
            {
             case .success(let employee):
@@ -46,7 +46,7 @@ let registerUserRequest = RegisterUserRequest(firstName: "code", lastName: "cat1
 let registerUserBody = try! JSONEncoder().encode(registerUserRequest)
 
   let utiltiy = HttpUtility()
-  utility.postData(requestUrl: requestUrl!, requestBody: registerUserBody, resultType: RegisterResponse.self) { (response) in
+  utility.request(requestUrl: requestUrl!, method: .post, requestBody: registerUserBody, resultType: RegisterResponse.self) { (response) in
    switch response
     {
       case .success(let registerResponse):
@@ -67,7 +67,7 @@ let request = PhoneRequest(color: "Red", manufacturer: nil)
 let requestUrl = request.convertToQueryStringUrl(urlString:"https://api-dev-scus-demo.azurewebsites.net/api/Product/GetSmartPhone")
 
 let utility = HttpUtility()
-utility.getData(requestUrl: requestUrl!, resultType: PhoneResponse.self) { (response) in
+utility.request(requestUrl: requestUrl!, method: .get, resultType: PhoneResponse.self) { (response) in
 
     switch response
     {
@@ -84,19 +84,8 @@ utility.getData(requestUrl: requestUrl!, resultType: PhoneResponse.self) { (resp
 ## Authentication Token
 
 ```swift
-let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
+let requestUrl = URL(string: "https://httpbin.org/get")
 let utility = HttpUtility(token: "your authentication token")
-        utility.getData(requestUrl: requestUrl!, resultType: Employees.self) { (response) in
-            switch response
-           {
-            case .success(let employee):
-            // your code here to display data
-
-            case .failure(let error):
-            // your code here to handle error
-            
-           }
-        }
 ```
 if you are using a basic or a bearer token then make sure you put basic or bearer before your token starts
 
