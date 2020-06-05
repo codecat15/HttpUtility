@@ -37,7 +37,7 @@ enum HttpMethods
 struct HttpUtility
 {
     private var _token: String? = nil
-    private var _customerJSONDecoder: JSONDecoder? = nil
+    private var _customJsonDecoder: JSONDecoder? = nil
     
     init(token: String?){
         _token = token
@@ -45,11 +45,11 @@ struct HttpUtility
 
     init(token: String?, decoder: JSONDecoder?){
         _token = token
-        _customerJSONDecoder = decoder
+        _customJsonDecoder = decoder
     }
 
     init(WithJsonDecoder decoder: JSONDecoder){
-        _customerJSONDecoder = decoder
+        _customJsonDecoder = decoder
     }
     
     init(){}
@@ -79,8 +79,8 @@ struct HttpUtility
     // MARK: - Private functions
     private func createJsonDecoder() -> JSONDecoder
     {
-        let decoder =  _customerJSONDecoder != nil ? _customerJSONDecoder! : JSONDecoder()
-        if(_customerJSONDecoder == nil)
+        let decoder =  _customJsonDecoder != nil ? _customJsonDecoder! : JSONDecoder()
+        if(_customJsonDecoder == nil)
         {
             decoder.dateDecodingStrategy = .iso8601
         }
