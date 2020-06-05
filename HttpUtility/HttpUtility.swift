@@ -34,25 +34,25 @@ enum HttpMethods
     case delete
 }
 
-struct HttpUtility
+public struct HttpUtility
 {
     private var _token: String? = nil
     private var _customJsonDecoder: JSONDecoder? = nil
     
-    init(token: String?){
+   public init(token: String?){
         _token = token
     }
 
-    init(token: String?, decoder: JSONDecoder?){
+    public init(token: String?, decoder: JSONDecoder?){
         _token = token
         _customJsonDecoder = decoder
     }
 
-    init(WithJsonDecoder decoder: JSONDecoder){
+    public init(WithJsonDecoder decoder: JSONDecoder){
         _customJsonDecoder = decoder
     }
     
-    init(){}
+    public init(){}
 
     func request<T:Decodable>(requestUrl: URL, method: HttpMethods, requestBody: Data? = nil,  resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
     {
