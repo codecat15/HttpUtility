@@ -6,6 +6,15 @@ HttpUtility is a light weight open source MIT license project which is helpful i
 # Purpose of usage
 Most of the time iOS application just perform simple HTTP operations which include sending request to the server and getting a response and displaying it to the user. If your iOS app does that then you may use this utility which does not do too much of heavy lifting and just pushes your request to the server and returns you a decoded object.
 
+# Installation
+
+## CocoaPods
+[CocoaPods](https://cocoapods.org/) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate HttpUtility into your Xcode project using CocoaPods, specify it in your Podfile:
+
+```
+pod 'HttpUtility', '~> 1.1'
+```
+
 # Using HttpUtility
 ## Introduction
 HttpUtility can be used for basic http operations like get, post, put and delete. It uses [URLSession](https://developer.apple.com/documentation/foundation/urlsession) to perform operations and is just a wrapper around it. 
