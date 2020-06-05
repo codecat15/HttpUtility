@@ -8,31 +8,32 @@
 
 import Foundation
 
-struct HttpMethod : Equatable, Hashable {
+public struct HttpMethod : Equatable, Hashable {
     static let get = "GET"
     static let post = "POST"
     static let put = "PUT"
     static let delete = "DELETE"
 }
 
-struct HttpHeaderFields
+public struct HttpHeaderFields
 {
     static let contentType = "content-type"
 }
 
-struct NetworkError : Error
+public struct NetworkError : Error
 {
     let reason: String?
     let httpStatusCode: Int?
 }
 
-enum HttpMethods
+public enum HttpMethods
 {
     case get
     case post
     case put
     case delete
 }
+
 
 public struct HttpUtility
 {
@@ -53,8 +54,8 @@ public struct HttpUtility
     }
     
     public init(){}
-
-    func request<T:Decodable>(requestUrl: URL, method: HttpMethods, requestBody: Data? = nil,  resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    
+    public func request<T:Decodable>(requestUrl: URL, method: HttpMethods, requestBody: Data? = nil,  resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
     {
         switch method
         {
