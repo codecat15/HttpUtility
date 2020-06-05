@@ -1,7 +1,7 @@
 # HttpUtility
 HttpUtility is a light weight open source MIT license project which is helpful in making HTTP requests to the server. It uses URLSession to make requests to the API and returns the [Result enum](https://developer.apple.com/documentation/swift/result) containing the decoded object in case of success or a error incase of failure. Right now this utility only decodes JSON response returned by the server.
 
-[![Build Status](https://travis-ci.com/codecat15/HttpUtility.svg?branch=master)](https://travis-ci.com/codecat15/HttpUtility)
+[![Build Status](https://travis-ci.com/codecat15/HttpUtility.svg?branch=master)](https://travis-ci.com/codecat15/HttpUtility) [![Twitter](https://img.shields.io/badge/twitter-@codecat15-blue.svg?style=flat)](https://twitter.com/codecat15)
 
 # Purpose of usage
 Most of the time iOS application just perform simple HTTP operations which include sending request to the server and getting a response and displaying it to the user. If your iOS app does that then you may use this utility which does not do too much of heavy lifting and just pushes your request to the server and returns you a decoded object.
@@ -39,6 +39,7 @@ let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
 ```
 
 ## POST request example
+The httpUtility has an extra parameter "requestBody" where you should attach the data that you have to post to the server, in the given example the RegisterUserRequest is a struct inheriting from the [Encodable protocol](https://developer.apple.com/documentation/swift/encodable) 
 
 ```swift
 let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/api/User/RegisterUser")
@@ -96,7 +97,7 @@ let utility = HttpUtility(token: basicToken)
 ```
 
 ### Example: Bearer token
-```
+```swift
 let bearerToken = "bearer your_token"
 let utility = HttpUtility(token: bearerToken)
 ```
