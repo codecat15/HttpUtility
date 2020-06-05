@@ -20,9 +20,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
         let expectation = XCTestExpectation(description: "Data received from server")
 
-        // ACT
-        _utility.getData(requestUrl: requestUrl!, resultType: Employees.self) { (response) in
-
+        _utility.request(requestUrl: requestUrl!, method: .get, resultType: Employees.self) { (response) in
             switch response
             {
             case .success(let employee):
@@ -50,8 +48,9 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let registerUserRequest = RegisterUserRequest(firstName: "code", lastName: "cat15", email: "codecat15@gmail.com", password: "1234")
         let registerUserBody = try! JSONEncoder().encode(registerUserRequest)
         let expectation = XCTestExpectation(description: "Data received from server")
+
         // ACT
-        _utility.postData(requestUrl: requestUrl!, requestBody: registerUserBody, resultType: RegisterResponse.self) { (response) in
+        _utility.request(requestUrl: requestUrl!, method: .post, requestBody: registerUserBody, resultType: RegisterResponse.self) { (response) in
             switch response
             {
             case .success(let registerResponse):
@@ -78,7 +77,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let requestUrl = request.convertToQueryStringUrl(urlString:"https://api-dev-scus-demo.azurewebsites.net/api/Product/GetSmartPhone")
 
         // ACT
-        _utility.getData(requestUrl: requestUrl!, resultType: PhoneResponse.self) { (response) in
+        _utility.request(requestUrl: requestUrl!, method: .get, resultType: PhoneResponse.self) { (response) in
 
             switch response
             {
@@ -97,6 +96,58 @@ class HttpUtilityIntegrationTests: XCTestCase {
 
         }
         
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func test_putService_Returns_Success()
+    {
+        // ARRANGE
+        let expectation = XCTestExpectation(description: "Data received from server")
+        let requestUrl = URL(string: "https://httpbin.org/put")
+
+        // ACT
+        _utility.request(requestUrl: requestUrl!, method: .put, resultType: Response.self) { (response) in
+
+            switch response
+            {
+            case .success(let serviceResponse):
+
+                // ASSERT
+                XCTAssertNotNil(serviceResponse)
+
+            case .failure(let error):
+                XCTAssertNil(error)
+            }
+            expectation.fulfill()
+
+        }
+
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func test_deleteService_Returns_Success()
+    {
+        // ARRANGE
+        let expectation = XCTestExpectation(description: "Data received from server")
+        let requestUrl = URL(string: "https://httpbin.org/delete")
+
+        // ACT
+        _utility.request(requestUrl: requestUrl!, method: .delete, resultType: Response.self) { (response) in
+
+            switch response
+            {
+            case .success(let serviceResponse):
+
+                // ASSERT
+                XCTAssertNotNil(serviceResponse)
+
+            case .failure(let error):
+                XCTAssertNil(error)
+            }
+            expectation.fulfill()
+
+        }
+
         wait(for: [expectation], timeout: 10.0)
     }
 }
