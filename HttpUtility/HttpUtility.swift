@@ -8,9 +8,11 @@
 
 import Foundation
 
-struct HttpMethodType {
-    static let GET = "GET"
-    static let POST = "POST"
+struct HttpMethod : Equatable, Hashable {
+    static let get = "GET"
+    static let post = "POST"
+    static let put = "PUT"
+    static let delete = "DELETE"
 }
 
 struct HttpHeaderFields
@@ -24,139 +26,64 @@ struct NetworkError : Error
     let httpStatusCode: Int?
 }
 
+enum HttpMethods
+{
+    case get
+    case post
+    case put
+    case delete
+}
+
 struct HttpUtility
 {
     private var _token: String? = nil
-    private var _dateFormatter: DateFormatter? = nil
+    private var _customJsonDecoder: JSONDecoder? = nil
     
     init(token: String?){
         _token = token
     }
-    
-    init(dateFormatter: DateFormatter){
-        _dateFormatter = dateFormatter
-    }
-    
-    init(token: String, dateFormatter: DateFormatter)
-    {
+
+    init(token: String?, decoder: JSONDecoder?){
         _token = token
-        _dateFormatter = dateFormatter
+        _customJsonDecoder = decoder
+    }
+
+    init(WithJsonDecoder decoder: JSONDecoder){
+        _customJsonDecoder = decoder
     }
     
     init(){}
-    
-    func getData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+
+    func request<T:Decodable>(requestUrl: URL, method: HttpMethods, requestBody: Data? = nil,  resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
     {
-        
-        var urlRequest = createUrlRequest(requestUrl: requestUrl)
-        urlRequest.httpMethod = HttpMethodType.GET
-        
-        URLSession.shared.dataTask(with: requestUrl) { (responseData, httpUrlResponse, error) in
-            
-            //todo: this code can be added into a common function
-            let statusCode = (httpUrlResponse as? HTTPURLResponse)?.statusCode
-            if(error == nil && responseData != nil && responseData?.count != 0)
-            {
-                let decoder = self.createJsonDecoder()
-                do
-                {
-                    let result = try decoder.decode(T.self, from: responseData!)
-                    completionHandler(.success(result))
-                }
-                catch let error
-                {
-                    debugPrint(error)
-                    completionHandler(.failure(NetworkError(reason: error.localizedDescription, httpStatusCode: statusCode)))
-                }
-            }
-            else
-            {
-                let error = NetworkError(reason: error.debugDescription,httpStatusCode: statusCode)
-                completionHandler(.failure(error))
-            }
-            
-        }.resume()
+        switch method
+        {
+        case .get:
+            getData(requestUrl: requestUrl, resultType: T.self) { completionHandler($0)}
+            break
+
+        case .post:
+            postData(requestUrl: requestUrl, requestBody: requestBody!, resultType: T.self) { completionHandler($0)}
+            break
+
+        case .put:
+            putData(requestUrl: requestUrl, resultType: T.self) { completionHandler($0)}
+            break
+
+        case .delete:
+            deleteData(requestUrl: requestUrl, resultType: T.self) { completionHandler($0)}
+            break
+        }
     }
-    
-    // MARK: - Post Api
-    func postData<T:Decodable>(requestUrl: URL, requestBody: Data, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
-    {
-        var urlRequest = createUrlRequest(requestUrl: requestUrl)
-        urlRequest.httpMethod = HttpMethodType.POST
-        urlRequest.httpBody = requestBody
-        urlRequest.addValue("application/json", forHTTPHeaderField: HttpHeaderFields.contentType)
-        
-        URLSession.shared.dataTask(with: urlRequest) { (data, httpUrlResponse, error) in
-            let statusCode = (httpUrlResponse as? HTTPURLResponse)?.statusCode
-            if(error == nil && data != nil && data?.count != 0)
-            {
-                do {
-                    
-                    let decoder = self.createJsonDecoder()
-                    let response = try decoder.decode(T.self, from: data!)
-                    completionHandler(.success(response))
-                }
-                catch let decodingError
-                {
-                    debugPrint(decodingError)
-                    let networkError = NetworkError(reason: decodingError.localizedDescription, httpStatusCode: statusCode)
-                    completionHandler(.failure(networkError))
-                }
-            }
-            else
-            {
-                let error = NetworkError(reason: error.debugDescription, httpStatusCode: statusCode)
-                completionHandler(.failure(error))
-            }
-            
-        }.resume()
-    }
-    
-    func postMultipartFormData<T:Decodable>(requestUrl: URL, multiPartRequestBody: Data, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
-    {
-        var urlRequest = URLRequest(url: requestUrl)
-        
-        urlRequest.httpMethod = HttpMethodType.POST
-        
-        let boundary = "---------------------------------\(UUID().uuidString)"
-        urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "content-type")
-        urlRequest.addValue("\(multiPartRequestBody.count)", forHTTPHeaderField: "content-length")
-        urlRequest.httpBody = multiPartRequestBody
-        
-        debugPrint("multipart form data => \(String(describing: String(data: multiPartRequestBody, encoding: .utf8)))")
-        
-        URLSession.shared.dataTask(with: urlRequest) { (data, httpUrlResponse, error) in
-            let statusCode = (httpUrlResponse as? HTTPURLResponse)?.statusCode
-            if(error == nil && data != nil && data?.count != 0)
-            {
-                do {
-                    let decoder = self.createJsonDecoder()
-                    let response = try decoder.decode(T.self, from: data!)
-                    completionHandler(.success(response))
-                }
-                catch let decodingError
-                {
-                    debugPrint(decodingError)
-                    let networkError = NetworkError(reason: decodingError.localizedDescription, httpStatusCode: statusCode)
-                    completionHandler(.failure(networkError))
-                }
-            }
-            else
-            {
-                debugPrint(error.debugDescription)
-                let networkError = NetworkError(reason: error.debugDescription, httpStatusCode: statusCode)
-                completionHandler(.failure(networkError))
-            }
-            
-        }.resume()
-        
-    }
-    
+
     // MARK: - Private functions
     private func createJsonDecoder() -> JSONDecoder
     {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = _dateFormatter != nil ? .formatted(_dateFormatter!) : .iso8601
+        let decoder =  _customJsonDecoder != nil ? _customJsonDecoder! : JSONDecoder()
+        if(_customJsonDecoder == nil)
+        {
+            decoder.dateDecodingStrategy = .iso8601
+        }
         return decoder
     }
     
@@ -169,5 +96,86 @@ struct HttpUtility
         }
         
         return urlRequest
+    }
+
+    private func decodeJsonResponse<T: Decodable>(data: Data, responseType: T.Type) -> T?
+    {
+        let decoder = self.createJsonDecoder()
+        do{
+            return try decoder.decode(T.self, from: data)
+        }catch let error{
+            debugPrint("deocding error =>\(error)")
+        }
+        return nil
+    }
+
+    private func performOperation<T: Decodable>(requestUrl: URLRequest, responseType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>) -> Void)
+    {
+        URLSession.shared.dataTask(with: requestUrl) { (data, httpUrlResponse, error) in
+
+            let statusCode = (httpUrlResponse as? HTTPURLResponse)?.statusCode
+            if(error == nil && data != nil && data?.count != 0)
+            {
+                let response = self.decodeJsonResponse(data: data!, responseType: T.self)
+
+                if(response != nil){
+                    completionHandler(.success(response))
+                }else{
+                    completionHandler(.failure(NetworkError(reason: "decoding error", httpStatusCode: statusCode)))
+                }
+            }
+            else
+            {
+                let networkError = NetworkError(reason: error.debugDescription,httpStatusCode: statusCode)
+                completionHandler(.failure(networkError))
+            }
+
+        }.resume()
+    }
+
+    // MARK: - GET Api
+    private func getData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    {
+        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        urlRequest.httpMethod = HttpMethod.get
+
+        performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
+            completionHandler(result)
+        }
+    }
+
+    // MARK: - POST Api
+    private func postData<T:Decodable>(requestUrl: URL, requestBody: Data, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    {
+        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        urlRequest.httpMethod = HttpMethod.post
+        urlRequest.httpBody = requestBody
+        urlRequest.addValue("application/json", forHTTPHeaderField: HttpHeaderFields.contentType)
+
+        performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
+            completionHandler(result)
+        }
+    }
+
+    // MARK: - PUT Api
+    private func putData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    {
+        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        urlRequest.httpMethod = HttpMethod.put
+
+        performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
+            completionHandler(result)
+        }
+    }
+
+    // MARK: - DELETE Api
+    private func deleteData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    {
+        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        urlRequest.httpMethod = HttpMethod.delete
+
+        performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
+            completionHandler(result)
+        }
     }
 }

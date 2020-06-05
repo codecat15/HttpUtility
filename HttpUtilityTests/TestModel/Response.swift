@@ -55,3 +55,47 @@ struct MultiPartResponse: Decodable {
 struct MultipartMessage: Decodable {
     let message: String?
 }
+
+// MARK: - Employee
+struct Response: Decodable {
+    let args: Args?
+    let data: String?
+    let files, form: Args?
+    let headers: Headers?
+    let employeeJSON, origin: String?
+    let url: String?
+
+    enum CodingKeys: String, CodingKey {
+        case args, data, files, form, headers
+        case employeeJSON
+        case origin, url
+    }
+}
+
+// MARK: - Args
+struct Args: Decodable {
+}
+
+// MARK: - Headers
+struct Headers: Decodable {
+    let accept, acceptEncoding, acceptLanguage, contentLength: String?
+    let host: String?
+    let origin, referer: String?
+    let secFetchDest, secFetchMode, secFetchSite, userAgent: String?
+    let xAmznTraceID: String?
+
+    enum CodingKeys: String, CodingKey {
+        case accept
+        case acceptEncoding
+        case acceptLanguage
+        case contentLength
+        case host
+        case origin
+        case referer
+        case secFetchDest
+        case secFetchMode
+        case secFetchSite
+        case userAgent
+        case xAmznTraceID
+    }
+}
