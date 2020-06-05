@@ -14,11 +14,11 @@ The best thing about this utility is that it takes a simple URL and returns you 
 
 Given are the some of the examples on how you can make use of this utility
 
-1. [Get request](https://github.com/codecat15/HttpUtility#GET%20Request%20example)
-2. [Post request](https://github.com/codecat15/HttpUtility#POST%20request%20example)
-3. [Request with query string parameters](https://github.com/codecat15/HttpUtility#GET%20request%20with%20Query%20string%20parameters)
-4. [Request with authentication token](https://github.com/codecat15/HttpUtility#Authentication%20Token)
-5. [Customize JSONDecoder](https://github.com/codecat15/HttpUtility#Custom%20JSONDecoder)
+1. [Get request](https://github.com/codecat15/HttpUtility#get-request-example)
+2. [Post request](https://github.com/codecat15/HttpUtility#post-request-example)
+3. [Request with query string parameters](https://github.com/codecat15/HttpUtility#get-request-with-query-string-parameters)
+4. [Request with authentication token](https://github.com/codecat15/HttpUtility#authentication-token)
+5. [Customize JSONDecoder](https://github.com/codecat15/HttpUtility#token-and-custom-jsondecoder)
 
 ## GET Request example
 
