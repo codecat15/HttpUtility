@@ -8,30 +8,18 @@
 
 import Foundation
 
-public struct HttpMethod : Equatable, Hashable {
-    static let get = "GET"
-    static let post = "POST"
-    static let put = "PUT"
-    static let delete = "DELETE"
-}
-
-public struct HttpHeaderFields
-{
-    static let contentType = "content-type"
-}
-
-public struct NetworkError : Error
+public struct HUNetworkError : Error
 {
     let reason: String?
     let httpStatusCode: Int?
 }
 
-public enum HttpMethods
+public enum HUHttpMethods : String
 {
-    case get
-    case post
-    case put
-    case delete
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
 }
 
 
@@ -55,12 +43,12 @@ public struct HttpUtility
     
     public init(){}
     
-    public func request<T:Decodable>(requestUrl: URL, method: HttpMethods, requestBody: Data? = nil,  resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    public func request<T:Decodable>(requestUrl: URL, method: HUHttpMethods, requestBody: Data? = nil,  resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
         switch method
         {
         case .get:
-            getData(requestUrl: requestUrl, resultType: T.self) { completionHandler($0)}
+            getData(requestUrl: requestUrl, resultType: resultType) { completionHandler($0)}
             break
 
         case .post:
@@ -68,11 +56,11 @@ public struct HttpUtility
             break
 
         case .put:
-            putData(requestUrl: requestUrl, resultType: T.self) { completionHandler($0)}
+            putData(requestUrl: requestUrl, resultType: resultType) { completionHandler($0)}
             break
 
         case .delete:
-            deleteData(requestUrl: requestUrl, resultType: T.self) { completionHandler($0)}
+            deleteData(requestUrl: requestUrl, resultType: resultType) { completionHandler($0)}
             break
         }
     }
@@ -103,31 +91,31 @@ public struct HttpUtility
     {
         let decoder = self.createJsonDecoder()
         do{
-            return try decoder.decode(T.self, from: data)
+            return try decoder.decode(responseType, from: data)
         }catch let error{
             debugPrint("deocding error =>\(error)")
         }
         return nil
     }
 
-    private func performOperation<T: Decodable>(requestUrl: URLRequest, responseType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>) -> Void)
+    private func performOperation<T: Decodable>(requestUrl: URLRequest, responseType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>) -> Void)
     {
         URLSession.shared.dataTask(with: requestUrl) { (data, httpUrlResponse, error) in
 
             let statusCode = (httpUrlResponse as? HTTPURLResponse)?.statusCode
             if(error == nil && data != nil && data?.count != 0)
             {
-                let response = self.decodeJsonResponse(data: data!, responseType: T.self)
+                let response = self.decodeJsonResponse(data: data!, responseType: responseType)
 
                 if(response != nil){
                     completionHandler(.success(response))
                 }else{
-                    completionHandler(.failure(NetworkError(reason: "decoding error", httpStatusCode: statusCode)))
+                    completionHandler(.failure(HUNetworkError(reason: "decoding error", httpStatusCode: statusCode)))
                 }
             }
             else
             {
-                let networkError = NetworkError(reason: error.debugDescription,httpStatusCode: statusCode)
+                let networkError = HUNetworkError(reason: error.debugDescription,httpStatusCode: statusCode)
                 completionHandler(.failure(networkError))
             }
 
@@ -135,10 +123,10 @@ public struct HttpUtility
     }
 
     // MARK: - GET Api
-    private func getData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    private func getData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
         var urlRequest = createUrlRequest(requestUrl: requestUrl)
-        urlRequest.httpMethod = HttpMethod.get
+        urlRequest.httpMethod = "get"
 
         performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
             completionHandler(result)
@@ -146,12 +134,12 @@ public struct HttpUtility
     }
 
     // MARK: - POST Api
-    private func postData<T:Decodable>(requestUrl: URL, requestBody: Data, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    private func postData<T:Decodable>(requestUrl: URL, requestBody: Data, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
         var urlRequest = createUrlRequest(requestUrl: requestUrl)
-        urlRequest.httpMethod = HttpMethod.post
+        urlRequest.httpMethod = "post"
         urlRequest.httpBody = requestBody
-        urlRequest.addValue("application/json", forHTTPHeaderField: HttpHeaderFields.contentType)
+        urlRequest.addValue("application/json", forHTTPHeaderField: "content-type")
 
         performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
             completionHandler(result)
@@ -159,10 +147,10 @@ public struct HttpUtility
     }
 
     // MARK: - PUT Api
-    private func putData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    private func putData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
         var urlRequest = createUrlRequest(requestUrl: requestUrl)
-        urlRequest.httpMethod = HttpMethod.put
+        urlRequest.httpMethod = "put"
 
         performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
             completionHandler(result)
@@ -170,10 +158,10 @@ public struct HttpUtility
     }
 
     // MARK: - DELETE Api
-    private func deleteData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, NetworkError>)-> Void)
+    private func deleteData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
         var urlRequest = createUrlRequest(requestUrl: requestUrl)
-        urlRequest.httpMethod = HttpMethod.delete
+        urlRequest.httpMethod = "delete"
 
         performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
             completionHandler(result)
