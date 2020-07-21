@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		86171D7C24C7330000D71D06 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86171D7B24C7330000D71D06 /* UIImageViewExtension.swift */; };
 		8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC572483E3C60023549D /* EncodableExtension.swift */; };
 		8656BC5B2483E43D0023549D /* EncodableExtensionUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC5A2483E43D0023549D /* EncodableExtensionUnitTest.swift */; };
 		8656BC5E2484313F0023549D /* HttpUtilityIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC5D2484313F0023549D /* HttpUtilityIntegrationTests.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		86171D7B24C7330000D71D06 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 		8656BC572483E3C60023549D /* EncodableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodableExtension.swift; sourceTree = "<group>"; };
 		8656BC5A2483E43D0023549D /* EncodableExtensionUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodableExtensionUnitTest.swift; sourceTree = "<group>"; };
 		8656BC5D2484313F0023549D /* HttpUtilityIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpUtilityIntegrationTests.swift; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				8656BC572483E3C60023549D /* EncodableExtension.swift */,
+				86171D7B24C7330000D71D06 /* UIImageViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 			files = (
 				86719EB124720E40002A2AB0 /* HttpUtility.swift in Sources */,
 				8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */,
+				86171D7C24C7330000D71D06 /* UIImageViewExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
