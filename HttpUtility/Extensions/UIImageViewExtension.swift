@@ -11,19 +11,17 @@ import UIKit
 
 extension UIImageView
 {
-    func downloadImageFromUrl(urlString: String)
+    func downloadImageFromUrl(imageUrl: URL, placeHolderImage: String)
     {
-        let url = URL(string: urlString)!
-
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-
-            if(data != nil)
-            {
-                DispatchQueue.main.async {
-                    self.image = UIImage(data: data!)
+        self.image = UIImage(named: placeHolderImage)
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: imageUrl){
+                if let image = UIImage(data: data){
+                    DispatchQueue.main.async {
+                        self?.image = image
+                    }
                 }
             }
-        }.resume()
-
+        }
     }
 }
