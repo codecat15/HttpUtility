@@ -72,7 +72,7 @@ public struct HttpUtility
     // MARK: - GET Api
     private func getData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
-        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        var urlRequest = self.createUrlRequest(requestUrl: requestUrl)
         urlRequest.httpMethod = HUHttpMethods.get.rawValue
 
         performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
@@ -83,7 +83,7 @@ public struct HttpUtility
     // MARK: - POST Api
     private func postData<T:Decodable>(requestUrl: URL, requestBody: Data, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
-        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        var urlRequest = self.createUrlRequest(requestUrl: requestUrl)
         urlRequest.httpMethod = HUHttpMethods.post.rawValue
         urlRequest.httpBody = requestBody
         urlRequest.addValue("application/json", forHTTPHeaderField: "content-type")
@@ -96,7 +96,7 @@ public struct HttpUtility
     // MARK: - PUT Api
     private func putData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
-        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        var urlRequest = self.createUrlRequest(requestUrl: requestUrl)
         urlRequest.httpMethod = HUHttpMethods.put.rawValue
 
         performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
@@ -107,7 +107,7 @@ public struct HttpUtility
     // MARK: - DELETE Api
     private func deleteData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
-        var urlRequest = createUrlRequest(requestUrl: requestUrl)
+        var urlRequest = self.createUrlRequest(requestUrl: requestUrl)
         urlRequest.httpMethod = HUHttpMethods.delete.rawValue
 
         performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
@@ -123,7 +123,7 @@ public struct HttpUtility
             let statusCode = (httpUrlResponse as? HTTPURLResponse)?.statusCode
             if(error == nil && data != nil && data?.count != 0)
             {
-                let response = decodeJsonResponse(data: data!, responseType: responseType)
+                let response = self.decodeJsonResponse(data: data!, responseType: responseType)
 
                 if(response != nil){
                     completionHandler(.success(response))
