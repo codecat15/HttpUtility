@@ -12,7 +12,7 @@ import XCTest
 class HttpUtilityIntegrationTests: XCTestCase {
 
     private typealias Employees = [EmployeeResponse]
-    private let _utility = HttpUtility()
+    private let _utility = HttpUtility.shared
 
     func test_getApiData_With_Valid_Request_Returns_Success()
     {

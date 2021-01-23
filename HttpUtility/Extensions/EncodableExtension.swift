@@ -20,14 +20,10 @@ extension Encodable
             if(requestDictionary != nil)
             {
                 var queryItems: [URLQueryItem] = []
-
                 requestDictionary?.forEach({ (key, value) in
-
-                    if(value != nil)
-                    {
+                    if(value != nil){
                         let strValue = value.map { String(describing: $0) }
-                        if(strValue != nil && strValue?.count != 0)
-                        {
+                        if(strValue != nil && strValue?.count != 0){
                             queryItems.append(URLQueryItem(name: key, value: strValue))
                         }
                     }
@@ -48,6 +44,7 @@ extension Encodable
         do {
             let encoder = try JSONEncoder().encode(self)
             let result = (try? JSONSerialization.jsonObject(with: encoder, options: .allowFragments)).flatMap{$0 as? [String: Any?]}
+            
             return result
 
         } catch let error {
