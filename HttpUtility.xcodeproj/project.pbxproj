@@ -15,6 +15,8 @@
 		86719EA024720BD1002A2AB0 /* HttpUtility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86719E9624720BD1002A2AB0 /* HttpUtility.framework */; };
 		86719EA724720BD1002A2AB0 /* HttpUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 86719E9924720BD1002A2AB0 /* HttpUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		86719EB124720E40002A2AB0 /* HttpUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86719EB024720E40002A2AB0 /* HttpUtility.swift */; };
+		86CAEFE625BBBE98006A7791 /* HUNetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86CAEFE525BBBE98006A7791 /* HUNetworkError.swift */; };
+		86CAEFEA25BBBEDE006A7791 /* HUHttpMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86CAEFE925BBBEDE006A7791 /* HUHttpMethods.swift */; };
 		86E9B56424883E9100B78521 /* Requests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E9B56324883E9100B78521 /* Requests.swift */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +42,8 @@
 		86719E9F24720BD1002A2AB0 /* HttpUtilityTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HttpUtilityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		86719EA624720BD1002A2AB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86719EB024720E40002A2AB0 /* HttpUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpUtility.swift; sourceTree = "<group>"; };
+		86CAEFE525BBBE98006A7791 /* HUNetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUNetworkError.swift; sourceTree = "<group>"; };
+		86CAEFE925BBBEDE006A7791 /* HUHttpMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUHttpMethods.swift; sourceTree = "<group>"; };
 		86E9B56324883E9100B78521 /* Requests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Requests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,6 +121,8 @@
 		86719E9824720BD1002A2AB0 /* HttpUtility */ = {
 			isa = PBXGroup;
 			children = (
+				86CAEFE525BBBE98006A7791 /* HUNetworkError.swift */,
+				86CAEFE925BBBEDE006A7791 /* HUHttpMethods.swift */,
 				8656BC562483E3B20023549D /* Extensions */,
 				86719E9924720BD1002A2AB0 /* HttpUtility.h */,
 				86719E9A24720BD1002A2AB0 /* Info.plist */,
@@ -193,7 +199,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
-				LastUpgradeCheck = 1140;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = CodeCat15;
 				TargetAttributes = {
 					86719E9524720BD1002A2AB0 = {
@@ -246,9 +252,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86CAEFE625BBBE98006A7791 /* HUNetworkError.swift in Sources */,
 				86277C2024CB399B0078EB37 /* LazyImageView.swift in Sources */,
 				86719EB124720E40002A2AB0 /* HttpUtility.swift in Sources */,
 				8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */,
+				86CAEFEA25BBBEDE006A7791 /* HUHttpMethods.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +308,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -325,7 +334,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -363,6 +372,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -382,7 +392,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
