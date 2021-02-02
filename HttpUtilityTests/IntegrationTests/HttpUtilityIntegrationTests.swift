@@ -150,4 +150,96 @@ class HttpUtilityIntegrationTests: XCTestCase {
 
         wait(for: [expectation], timeout: 10.0)
     }
+
+    func test_MultiPartFormDataUpload_WithSmallRequestBody_Returns_Success()
+    {
+        // ARRANGE
+        let expectation = XCTestExpectation(description: "Multipart form data test")
+        let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/TestMultiPart")
+        let name = "Code"
+        let lastName = "Cat"
+
+        // todo: this code can be improved
+        let multiPartFormData = HUMultiPartFormData()
+        multiPartFormData.appendInitalBoundary() // what if the developer forgets to add this line?
+        multiPartFormData.appendBodyPart(parameterName: "Name", WithParameterData: name)
+        multiPartFormData.appendLineBreakForNextParameter() // I don't like this
+        multiPartFormData.appendBodyPart(parameterName: "LastName", WithParameterData: lastName)
+        multiPartFormData.appendClosingBoundary() // why does the dev has to specify all this???
+
+        let request = HURequest(url: requestUrl!, method: .post)
+
+        // ACT
+        _utility.requestWithMultiPart(request: request, resultType: TestMultiPartResponse.self, postBody: multiPartFormData) { (response) in
+            // ASSERT
+            switch response
+            {
+            case .success(let serviceResponse):
+
+                // ASSERT
+                XCTAssertNotNil(serviceResponse)
+                XCTAssertNotNil(serviceResponse?.data)
+                XCTAssertEqual(name, serviceResponse?.data.name)
+                XCTAssertEqual(lastName, serviceResponse?.data.lastName)
+
+            case .failure(let error):
+                XCTAssertNil(error.reason)
+            }
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func test_multiPartFormDataUpload_WithValidRequest_Returns_Success()
+    {
+        // ARRANGE
+        let expectation = XCTestExpectation(description: "Multipart form data test")
+        let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/api/Employee/MultiPartCodeChallenge")
+        let multiPartFormData = HUMultiPartFormData()
+
+        multiPartFormData.appendInitalBoundary()
+
+        multiPartFormData.appendBodyPart(parameterName: "Name", WithParameterData: "Codecat")
+        multiPartFormData.appendLineBreakForNextParameter()
+
+        multiPartFormData.appendBodyPart(parameterName: "LastName", WithParameterData: "HellWorld")
+        multiPartFormData.appendLineBreakForNextParameter()
+
+        multiPartFormData.appendBodyPart(parameterName: "DateofJoining", WithParameterData: "12-12-2012")
+        multiPartFormData.appendLineBreakForNextParameter()
+
+        multiPartFormData.appendBodyPart(parameterName: "DateofBirth", WithParameterData: "12-12-1992")
+        multiPartFormData.appendLineBreakForNextParameter()
+
+        multiPartFormData.appendBodyPart(parameterName: "Gender", WithParameterData: "HumanBeing")
+        multiPartFormData.appendLineBreakForNextParameter()
+
+        multiPartFormData.appendBodyPart(parameterName: "DepartmentName", WithParameterData: "Technology")
+        multiPartFormData.appendLineBreakForNextParameter()
+
+        multiPartFormData.appendBodyPart(parameterName: "ManagerName", WithParameterData: "MyManagerName")
+        multiPartFormData.appendClosingBoundary()
+
+        let request = HURequest(url: requestUrl!, method: .post)
+
+        // ACT
+        _utility.requestWithMultiPart(request: request, resultType: MultiPartResponse.self, postBody: multiPartFormData) { (response) in
+            // ASSERT
+            switch response
+            {
+            case .success(let serviceResponse):
+
+                // ASSERT
+                XCTAssertNotNil(serviceResponse)
+                XCTAssertNotNil(serviceResponse?.data)
+
+            case .failure(let error):
+                XCTAssertNil(error.reason)
+            }
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 10.0)
+    }
 }
