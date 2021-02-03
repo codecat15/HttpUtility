@@ -39,7 +39,7 @@ extension Encodable
         return nil
     }
     
-    private func convertToDictionary() -> [String: Any?]?
+     func convertToDictionary() -> [String: Any?]?
     {
         do {
             let encoder = try JSONEncoder().encode(self)

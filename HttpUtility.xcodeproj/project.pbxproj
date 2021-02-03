@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		86277C2024CB399B0078EB37 /* LazyImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86277C1F24CB399B0078EB37 /* LazyImageView.swift */; };
 		86521B5625C6FD7200E05422 /* HURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86521B5525C6FD7100E05422 /* HURequest.swift */; };
-		86521B5C25C7023D00E05422 /* HUMultiPartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86521B5B25C7023D00E05422 /* HUMultiPartFormData.swift */; };
 		8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC572483E3C60023549D /* EncodableExtension.swift */; };
 		8656BC5B2483E43D0023549D /* EncodableExtensionUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC5A2483E43D0023549D /* EncodableExtensionUnitTest.swift */; };
 		8656BC5E2484313F0023549D /* HttpUtilityIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC5D2484313F0023549D /* HttpUtilityIntegrationTests.swift */; };
@@ -35,7 +34,6 @@
 /* Begin PBXFileReference section */
 		86277C1F24CB399B0078EB37 /* LazyImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyImageView.swift; sourceTree = "<group>"; };
 		86521B5525C6FD7100E05422 /* HURequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HURequest.swift; sourceTree = "<group>"; };
-		86521B5B25C7023D00E05422 /* HUMultiPartFormData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUMultiPartFormData.swift; sourceTree = "<group>"; };
 		8656BC572483E3C60023549D /* EncodableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodableExtension.swift; sourceTree = "<group>"; };
 		8656BC5A2483E43D0023549D /* EncodableExtensionUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodableExtensionUnitTest.swift; sourceTree = "<group>"; };
 		8656BC5D2484313F0023549D /* HttpUtilityIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpUtilityIntegrationTests.swift; sourceTree = "<group>"; };
@@ -132,7 +130,6 @@
 				86719E9924720BD1002A2AB0 /* HttpUtility.h */,
 				86719E9A24720BD1002A2AB0 /* Info.plist */,
 				86719EB024720E40002A2AB0 /* HttpUtility.swift */,
-				86521B5B25C7023D00E05422 /* HUMultiPartFormData.swift */,
 			);
 			path = HttpUtility;
 			sourceTree = "<group>";
@@ -262,7 +259,6 @@
 				86277C2024CB399B0078EB37 /* LazyImageView.swift in Sources */,
 				86719EB124720E40002A2AB0 /* HttpUtility.swift in Sources */,
 				8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */,
-				86521B5C25C7023D00E05422 /* HUMultiPartFormData.swift in Sources */,
 				86521B5625C6FD7200E05422 /* HURequest.swift in Sources */,
 				86CAEFEA25BBBEDE006A7791 /* HUHttpMethods.swift in Sources */,
 			);

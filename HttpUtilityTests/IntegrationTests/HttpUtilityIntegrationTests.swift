@@ -9,6 +9,12 @@
 import XCTest
 @testable import HttpUtility
 
+
+struct MyStruct : Encodable
+{
+    let name, lastName: String
+}
+
 class HttpUtilityIntegrationTests: XCTestCase {
 
     private typealias Employees = [EmployeeResponse]
@@ -156,22 +162,15 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ARRANGE
         let expectation = XCTestExpectation(description: "Multipart form data test")
         let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/TestMultiPart")
-        let name = "Code"
-        let lastName = "Cat"
 
-        // todo: this code can be improved
-        let multiPartFormData = HUMultiPartFormData()
-        multiPartFormData.appendInitalBoundary() // what if the developer forgets to add this line?
-        multiPartFormData.appendBodyPart(parameterName: "Name", WithParameterData: name)
-        multiPartFormData.appendLineBreakForNextParameter() // I don't like this
-        multiPartFormData.appendBodyPart(parameterName: "LastName", WithParameterData: lastName)
-        multiPartFormData.appendClosingBoundary() // why does the dev has to specify all this???
+        // request parameter structure that inherits from Encodable
+        let myStruct = MyStruct(name: "Bruce", lastName: "Wayne")
 
-        let request = HURequest(url: requestUrl!, method: .post)
+        // HURequest object containing information about the type of API call with request object
+        let huRequest = HURequest(url: requestUrl!, method: .post, request: myStruct)
 
         // ACT
-        _utility.requestWithMultiPart(request: request, resultType: TestMultiPartResponse.self, postBody: multiPartFormData) { (response) in
-            // ASSERT
+        _utility.requestWithMultiPartFormData(huRequest: huRequest, responseType: TestMultiPartResponse.self) { (response) in
             switch response
             {
             case .success(let serviceResponse):
@@ -179,8 +178,8 @@ class HttpUtilityIntegrationTests: XCTestCase {
                 // ASSERT
                 XCTAssertNotNil(serviceResponse)
                 XCTAssertNotNil(serviceResponse?.data)
-                XCTAssertEqual(name, serviceResponse?.data.name)
-                XCTAssertEqual(lastName, serviceResponse?.data.lastName)
+                XCTAssertEqual(myStruct.name, serviceResponse?.data.name)
+                XCTAssertEqual(myStruct.lastName, serviceResponse?.data.lastName)
 
             case .failure(let error):
                 XCTAssertNil(error.reason)
@@ -196,35 +195,13 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ARRANGE
         let expectation = XCTestExpectation(description: "Multipart form data test")
         let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/api/Employee/MultiPartCodeChallenge")
-        let multiPartFormData = HUMultiPartFormData()
 
-        multiPartFormData.appendInitalBoundary()
+        let multiPartFormRequest = MultiPartFormRequest(name: "Bruce", lastName: "Wayne", gender: "Male", departmentName: "Tech", managerName: "James Gordan", dateOfJoining: "01-09-2020", dateOfBirth: "07-07-1988")
 
-        multiPartFormData.appendBodyPart(parameterName: "Name", WithParameterData: "Codecat")
-        multiPartFormData.appendLineBreakForNextParameter()
-
-        multiPartFormData.appendBodyPart(parameterName: "LastName", WithParameterData: "HellWorld")
-        multiPartFormData.appendLineBreakForNextParameter()
-
-        multiPartFormData.appendBodyPart(parameterName: "DateofJoining", WithParameterData: "12-12-2012")
-        multiPartFormData.appendLineBreakForNextParameter()
-
-        multiPartFormData.appendBodyPart(parameterName: "DateofBirth", WithParameterData: "12-12-1992")
-        multiPartFormData.appendLineBreakForNextParameter()
-
-        multiPartFormData.appendBodyPart(parameterName: "Gender", WithParameterData: "HumanBeing")
-        multiPartFormData.appendLineBreakForNextParameter()
-
-        multiPartFormData.appendBodyPart(parameterName: "DepartmentName", WithParameterData: "Technology")
-        multiPartFormData.appendLineBreakForNextParameter()
-
-        multiPartFormData.appendBodyPart(parameterName: "ManagerName", WithParameterData: "MyManagerName")
-        multiPartFormData.appendClosingBoundary()
-
-        let request = HURequest(url: requestUrl!, method: .post)
+        let request = HURequest(url: requestUrl!, method: .post, request: multiPartFormRequest)
 
         // ACT
-        _utility.requestWithMultiPart(request: request, resultType: MultiPartResponse.self, postBody: multiPartFormData) { (response) in
+        _utility.requestWithMultiPartFormData(huRequest: request, responseType: MultiPartResponse.self) { (response) in
             // ASSERT
             switch response
             {

@@ -10,6 +10,7 @@ import Foundation
 
 public struct HURequest {
     
-    let url: URL
-    let method: HUHttpMethods
+    let url : URL
+    let method : HUHttpMethods
+    let request : Encodable
 }

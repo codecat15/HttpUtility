@@ -39,10 +39,8 @@ public struct HttpUtility
     }
 
     // MARK: - Multipart
-
-    public func requestWithMultiPart<T:Decodable>(request: HURequest, resultType: T.Type, postBody: HUMultiPartFormData, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void) {
-        
-        postMultiPartFormData(requestUrl: request.url, multiPartFormData: postBody, resultType: resultType.self) { completionHandler($0) }
+    public func requestWithMultiPartFormData<T:Decodable>(huRequest: HURequest, responseType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void) {
+        postMultiPartFormData(huRequest: huRequest) { completionHandler($0) }
     }
 
     // MARK: - Private functions
@@ -100,23 +98,41 @@ public struct HttpUtility
         }
     }
 
-    private func postMultiPartFormData<T:Decodable>(requestUrl: URL, multiPartFormData: HUMultiPartFormData, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
+    private func postMultiPartFormData<T:Decodable>(huRequest: HURequest, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
-        var urlRequest = self.createUrlRequest(requestUrl: requestUrl)
+        let boundary = "-----------------------------\(UUID().uuidString)"
+        let lineBreak = "\r\n"
+        var urlRequest = self.createUrlRequest(requestUrl: huRequest.url)
         urlRequest.httpMethod = HUHttpMethods.post.rawValue
-
-        let body = multiPartFormData.getMultiPartBody()
-        let boundary = multiPartFormData.getBoundary()
-
         urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        urlRequest.addValue("\(body.count)", forHTTPHeaderField: "Content-Length")
-        urlRequest.httpBody = body
-        
-        performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
-            completionHandler(result)
+
+        var postBody = Data()
+
+        let requestDictionary = huRequest.request.convertToDictionary()
+        if(requestDictionary != nil)
+        {
+            requestDictionary?.forEach({ (key, value) in
+                if(value != nil) {
+                    let strValue = value.map { String(describing: $0) }
+                    if(strValue != nil && strValue?.count != 0) {
+                        postBody.append("--\(boundary + lineBreak)" .data(using: .utf8)!)
+                        postBody.append("Content-Disposition: form-data; name=\"\(key)\" \(lineBreak + lineBreak)" .data(using: .utf8)!)
+                        postBody.append("\(strValue! + lineBreak)".data(using: .utf8)!)
+                    }
+                }
+            })
+
+            postBody.append("--\(boundary)--\(lineBreak)" .data(using: .utf8)!)
+
+            urlRequest.addValue("\(postBody.count)", forHTTPHeaderField: "Content-Length")
+            urlRequest.httpBody = postBody
+
+            performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
+                completionHandler(result)
+            }
         }
     }
-
+    
     // MARK: - PUT Api
     private func putData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
@@ -145,6 +161,7 @@ public struct HttpUtility
         URLSession.shared.dataTask(with: requestUrl) { (data, httpUrlResponse, error) in
 
             let statusCode = (httpUrlResponse as? HTTPURLResponse)?.statusCode
+            debugPrint(String(data: data!, encoding: .utf8)!)
             if(error == nil && data != nil && data?.count != 0) {
                 let response = self.decodeJsonResponse(data: data!, responseType: responseType)
                 if(response != nil) {
