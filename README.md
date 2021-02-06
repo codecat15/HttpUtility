@@ -175,7 +175,7 @@ customJsonDecoder.dateEncoding = .millisecondsSince1970
 let bearerToken = "bearer your_token"
 
 utility.customJsonDecoder = customJsonDecoder
-utility.authenticationToken = token
+utility.authenticationToken = bearerToken
 
 ```
 
@@ -183,14 +183,14 @@ utility.authenticationToken = token
 
 The HUNetworkError structure provides in detail description beneficial for debugging purpose, given are the following properties that will be populated in case an error occurs
 
-1. ### Status: This will contain the HTTPStatus code for the request (200)
+1. ##### Status: ##### This will contain the HTTPStatus code for the request (200)
 
-2. ### ServerResponse: This will be the JSON string of the response you received from the server. (not to be confused with error parameter) on error if server returns the error JSON data that message will be decoded to human readable string.
+2. ##### ServerResponse: ##### This will be the JSON string of the response you received from the server. (not to be confused with error parameter) on error if server returns the error JSON data that message will be decoded to human readable string.
 
-3. ### RequestUrl: The request URL that you just called.
+3. ##### RequestUrl: ##### The request URL that you just called.
 
-4. ### RequestBody: If you get failure on POST request this property would contain a string representation of the HTTPBody that was sent to the server.
+4. ##### RequestBody: ##### If you get failure on POST request this property would contain a string representation of the HTTPBody that was sent to the server.
 
-5. ### Reason: This property would contain the debug description from the error closure parameter.
+5. ##### Reason: ##### This property would contain the debug description from the error closure parameter.
 
 This utility is for performing basic tasks, and is currently evolving, but if you have any specific feature in mind then please feel free to drop a request and I will try my best to implement it
