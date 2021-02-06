@@ -186,7 +186,7 @@ utility.authenticationToken = bearerToken
 
 The HUNetworkError structure provides in detail description beneficial for debugging purpose, given are the following properties that will be populated in case an error occurs
 
-1. **Status:** This will contain the HTTPStatus code for the request (200)
+1. **Status:** This will contain the HTTPStatus code for the request that we receive from the server.
 
 2. **ServerResponse:** This will be the JSON string of the response you received from the server. (not to be confused with error parameter) on error if server returns the error JSON data that message will be decoded to human readable string.
 
