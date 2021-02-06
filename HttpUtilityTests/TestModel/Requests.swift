@@ -44,3 +44,13 @@ struct MultiPartFormRequest: Encodable
         case managerName = "ManagerName"
     }
 }
+
+struct MultiPartFormFileUploadRequest : Encodable
+{
+    let attachment: Data
+    let fileName : String
+    enum CodingKeys : String, CodingKey {
+        case fileName = "FileName"
+        case attachment = "Attachment"
+    }
+}

@@ -110,3 +110,8 @@ struct Headers: Decodable {
         case xAmznTraceID
     }
 }
+
+// MARK: - Multipart image upload model
+struct MultiPartImageUploadResponse : Decodable {
+    let path : String
+}
