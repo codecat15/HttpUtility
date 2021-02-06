@@ -41,7 +41,7 @@ Given are the some of the examples on how you can make use of this utility
 ```swift
 let utility = HTTPUtility.shared // using the shared instance of the utility to make the API call 
 let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
- let request = HURequest(url: requestUrl!, method: .get)
+let request = HURequest(withUrl: requestUrl!, forHttpMethod: .get)
         
         utility.request(huRequest: request, resultType: Employees.self) { (response) in
             switch response
@@ -67,7 +67,7 @@ let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/api/Us
 let registerUserRequest = RegisterUserRequest(firstName: "code", lastName: "cat15", email: "codecat15@gmail.com", password: "1234")
 
 let registerUserBody = try! JSONEncoder().encode(registerUserRequest)
-let request = HURequest(url: requestUrl!, method: .post, requestBody: registerUserBody)
+let request = HURequest(withUrl: requestUrl!, forHttpMethod: .post, requestBody: registerUserBody)
 
   utility.request(huRequest: request, resultType: RegisterResponse.self) { (response) in
    switch response
@@ -90,7 +90,7 @@ let request = PhoneRequest(color: "Red", manufacturer: nil)
 // using the extension to convert the encodable request structure to a query string url
 let requestUrl = request.convertToQueryStringUrl(urlString:"https://api-dev-scus-demo.azurewebsites.net/api/Product/GetSmartPhone")
 
-let request = HURequest(url: requestUrl!, method: .get)
+let request = HURequest(withUrl: requestUrl!, forHttpMethod: .get)
 utility.request(huRequest: request, resultType: PhoneResponse.self) { (response) in
 
     switch response
