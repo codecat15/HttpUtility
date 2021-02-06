@@ -34,7 +34,7 @@ Given are the some of the examples on how you can make use of this utility
 4. [Request with MultiPartFormData](https://github.com/codecat15/HttpUtility#post-request-with-multipartformdata)
 5. [Request with authentication token](https://github.com/codecat15/HttpUtility#authentication-token)
 6. [Customize JSONDecoder in the Utility](https://github.com/codecat15/HttpUtility#token-and-custom-jsondecoder)
-7. [HUNetworkError]
+7. [HUNetworkError](https://github.com/codecat15/HttpUtility/tree/multipart-form-data-format#hunetworkerror)
 
 ## GET Request example
 
@@ -105,15 +105,16 @@ utility.request(huRequest: request, resultType: PhoneResponse.self) { (response)
 ## POST request with MultiPartFormData
 
 ```swift
+
+let utility = HttpUtility.shared
 let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/TestMultiPart")
 
 // your request model struct should implement the encodable protocol
 let requestModel = RequestModel(name: "Bruce", lastName: "Wayne")
+
 let multiPartRequest = HUMultiPartRequest(url: requestUrl!, method: .post, request: requestModel)
 
-let request = HURequest(url: requestUrl!, method: .get)
-let utility = HttpUtility.shared
-_utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, responseType: TestMultiPartResponse.self) { (response) in
+utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, responseType: TestMultiPartResponse.self) { (response) in
             switch response
             {
             case .success(let serviceResponse):
@@ -122,15 +123,15 @@ _utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, respon
             case .failure(let error):
                 // code to handle failure
             }
-            expectation.fulfill()
         }
 ```
 
 ## Authentication Token
 
 ```swift
-let requestUrl = URL(string: "https://httpbin.org/get")
-let utility = HttpUtility(token: "your authentication token")
+let token = "your_token"
+let utility = HttpUtility.shared
+utility.authenticationToken = token
 ```
 
 if you are using a basic or a bearer token then make sure you put basic or bearer before your token starts
@@ -167,12 +168,11 @@ utility.customJsonDecoder = customJsonDecoder
 At times when you pass the token and the default JSONDecoder is just not enough, then you may use the init method of the utility to pass the token and a custom JSONDecoder both to make the API request and parse the JSON response
 
 ```swift
+let utility = HttpUtility.shared
 let customJsonDecoder = JSONDecoder()
 customJsonDecoder.dateEncoding = .millisecondsSince1970
 
 let bearerToken = "bearer your_token"
-
-let utility = HttpUtility.shared
 
 utility.customJsonDecoder = customJsonDecoder
 utility.authenticationToken = token
@@ -183,10 +183,14 @@ utility.authenticationToken = token
 
 The HUNetworkError structure provides in detail description beneficial for debugging purpose, given are the following properties that will be populated in case an error occurs
 
-1. Status: This will contain the HTTPStatus code for the request (200)
-2. ServerResponse: This will be the JSON string of the response you received from the server. (not to be confused with error parameter) on error if server returns the error JSON data that message will be decoded to human readable string.
-3. RequestUrl: The request URL that you just called.
-4. RequestBody: If you get failure on POST request this property would contain a string representation of the HTTPBody that was sent to the server.
-5. Reason: This property would contain the debug description from the error closure parameter.
+1. ### Status: This will contain the HTTPStatus code for the request (200)
+
+2. ### ServerResponse: This will be the JSON string of the response you received from the server. (not to be confused with error parameter) on error if server returns the error JSON data that message will be decoded to human readable string.
+
+3. ### RequestUrl: The request URL that you just called.
+
+4. ### RequestBody: If you get failure on POST request this property would contain a string representation of the HTTPBody that was sent to the server.
+
+5. ### Reason: This property would contain the debug description from the error closure parameter.
 
 This utility is for performing basic tasks, and is currently evolving, but if you have any specific feature in mind then please feel free to drop a request and I will try my best to implement it
