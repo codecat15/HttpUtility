@@ -15,7 +15,7 @@ Most of the time iOS application just perform simple HTTP operations which inclu
 [CocoaPods](https://cocoapods.org/) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate HttpUtility into your Xcode project using CocoaPods, specify it in your Podfile:
 
 ```
-pod 'HttpUtility', '~> 1.1'
+pod 'HttpUtility', '~> 1.2'
 ```
 
 # Using HttpUtility
