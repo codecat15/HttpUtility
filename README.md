@@ -39,9 +39,10 @@ Given are the some of the examples on how you can make use of this utility
 ## GET Request example
 
 ```swift
+let utility = HTTPUtility.shared // using the shared instance of the utility to make the API call 
 let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
  let request = HURequest(url: requestUrl!, method: .get)
-        let utility = HTTPUtility.shared
+        
         utility.request(huRequest: request, resultType: Employees.self) { (response) in
             switch response
            {
@@ -60,12 +61,14 @@ let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
 The httpUtility has an extra parameter "requestBody" where you should attach the data that you have to post to the server, in the given example the RegisterUserRequest is a struct inheriting from the [Encodable protocol](https://developer.apple.com/documentation/swift/encodable)
 
 ```swift
+let utiltiy = HttpUtility.shared // using the shared instance of the utility to make the API call
+
 let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/api/User/RegisterUser")
 let registerUserRequest = RegisterUserRequest(firstName: "code", lastName: "cat15", email: "codecat15@gmail.com", password: "1234")
+
 let registerUserBody = try! JSONEncoder().encode(registerUserRequest)
 let request = HURequest(url: requestUrl!, method: .post, requestBody: registerUserBody)
 
-  let utiltiy = HttpUtility.shared
   utility.request(huRequest: request, resultType: RegisterResponse.self) { (response) in
    switch response
     {
@@ -81,13 +84,13 @@ let request = HURequest(url: requestUrl!, method: .post, requestBody: registerUs
 ## GET request with Query string parameters
 
 ```swift
+let utiltiy = HttpUtility.shared // using the shared instance of the utility to make the API call
 let request = PhoneRequest(color: "Red", manufacturer: nil)
 
 // using the extension to convert the encodable request structure to a query string url
 let requestUrl = request.convertToQueryStringUrl(urlString:"https://api-dev-scus-demo.azurewebsites.net/api/Product/GetSmartPhone")
 
 let request = HURequest(url: requestUrl!, method: .get)
-let utility = HttpUtility.shared
 utility.request(huRequest: request, resultType: PhoneResponse.self) { (response) in
 
     switch response
@@ -106,7 +109,7 @@ utility.request(huRequest: request, resultType: PhoneResponse.self) { (response)
 
 ```swift
 
-let utility = HttpUtility.shared
+let utiltiy = HttpUtility.shared // using the shared instance of the utility to make the API call
 let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/TestMultiPart")
 
 // your request model struct should implement the encodable protocol
@@ -129,8 +132,8 @@ utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, respons
 ## Authentication Token
 
 ```swift
-let token = "your_token"
 let utility = HttpUtility.shared
+let token = "your_token"
 utility.authenticationToken = token
 ```
 
@@ -183,14 +186,14 @@ utility.authenticationToken = bearerToken
 
 The HUNetworkError structure provides in detail description beneficial for debugging purpose, given are the following properties that will be populated in case an error occurs
 
-1. ##### Status: ##### This will contain the HTTPStatus code for the request (200)
+1. **Status:** This will contain the HTTPStatus code for the request (200)
 
-2. ##### ServerResponse: ##### This will be the JSON string of the response you received from the server. (not to be confused with error parameter) on error if server returns the error JSON data that message will be decoded to human readable string.
+2. **ServerResponse:** This will be the JSON string of the response you received from the server. (not to be confused with error parameter) on error if server returns the error JSON data that message will be decoded to human readable string.
 
-3. ##### RequestUrl: ##### The request URL that you just called.
+3. **RequestUrl:** The request URL that you just called.
 
-4. ##### RequestBody: ##### If you get failure on POST request this property would contain a string representation of the HTTPBody that was sent to the server.
+4. **RequestBody:** If you get failure on POST request this property would contain a string representation of the HTTPBody that was sent to the server.
 
-5. ##### Reason: ##### This property would contain the debug description from the error closure parameter.
+5. **Reason:** This property would contain the debug description from the error closure parameter.
 
 This utility is for performing basic tasks, and is currently evolving, but if you have any specific feature in mind then please feel free to drop a request and I will try my best to implement it
