@@ -9,6 +9,12 @@
 import XCTest
 @testable import HttpUtility
 
+
+struct MyStruct : Encodable
+{
+    let name, lastName: String
+}
+
 class HttpUtilityIntegrationTests: XCTestCase {
 
     private typealias Employees = [EmployeeResponse]
@@ -19,8 +25,9 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ARRANGE
         let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
         let expectation = XCTestExpectation(description: "Data received from server")
+        let request = HURequest(withUrl: requestUrl!, forHttpMethod: .get)
 
-        _utility.request(requestUrl: requestUrl!, method: .get, resultType: Employees.self) { (response) in
+        _utility.request(huRequest: request, resultType: Employees.self) { (response) in
             switch response
             {
             case .success(let employee):
@@ -49,8 +56,9 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let registerUserBody = try! JSONEncoder().encode(registerUserRequest)
         let expectation = XCTestExpectation(description: "Data received from server")
 
+        let request = HURequest(withUrl: requestUrl!, forHttpMethod: .post, requestBody: registerUserBody)
         // ACT
-        _utility.request(requestUrl: requestUrl!, method: .post, requestBody: registerUserBody, resultType: RegisterResponse.self) { (response) in
+        _utility.request(huRequest: request, resultType: RegisterResponse.self) { (response) in
             switch response
             {
             case .success(let registerResponse):
@@ -75,9 +83,10 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Data received from server")
         let request = PhoneRequest(color: "Red", manufacturer: nil)
         let requestUrl = request.convertToQueryStringUrl(urlString:"https://api-dev-scus-demo.azurewebsites.net/api/Product/GetSmartPhone")
+        let huRequest = HURequest(withUrl: requestUrl!, forHttpMethod: .get)
 
         // ACT
-        _utility.request(requestUrl: requestUrl!, method: .get, resultType: PhoneResponse.self) { (response) in
+        _utility.request(huRequest: huRequest, resultType: PhoneResponse.self) { (response) in
 
             switch response
             {
@@ -104,9 +113,10 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ARRANGE
         let expectation = XCTestExpectation(description: "Data received from server")
         let requestUrl = URL(string: "https://httpbin.org/put")
+        let huRequest = HURequest(withUrl: requestUrl!, forHttpMethod: .put)
 
         // ACT
-        _utility.request(requestUrl: requestUrl!, method: .put, resultType: Response.self) { (response) in
+        _utility.request(huRequest: huRequest, resultType: Response.self) { (response) in
 
             switch response
             {
@@ -130,9 +140,10 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ARRANGE
         let expectation = XCTestExpectation(description: "Data received from server")
         let requestUrl = URL(string: "https://httpbin.org/delete")
+        let huRequest = HURequest(withUrl: requestUrl!, forHttpMethod: .delete)
 
         // ACT
-        _utility.request(requestUrl: requestUrl!, method: .delete, resultType: Response.self) { (response) in
+        _utility.request(huRequest: huRequest, resultType: Response.self) { (response) in
 
             switch response
             {
@@ -146,6 +157,98 @@ class HttpUtilityIntegrationTests: XCTestCase {
             }
             expectation.fulfill()
 
+        }
+
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func test_requestWithMultiPartFormData_WithSmallRequestBody_Returns_Success()
+    {
+        // ARRANGE
+        let expectation = XCTestExpectation(description: "Multipart form data test")
+        let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/TestMultiPart")
+
+        let myStruct = MyStruct(name: "Bruce", lastName: "Wayne")
+        let multiPartRequest = HUMultiPartRequest(url: requestUrl!, method: .post, request: myStruct)
+        
+        // ACT
+        _utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, responseType: TestMultiPartResponse.self) { (response) in
+            switch response
+            {
+            case .success(let serviceResponse):
+
+                // ASSERT
+                XCTAssertNotNil(serviceResponse)
+                XCTAssertNotNil(serviceResponse?.data)
+                XCTAssertEqual(myStruct.name, serviceResponse?.data.name)
+                XCTAssertEqual(myStruct.lastName, serviceResponse?.data.lastName)
+
+            case .failure(let error):
+                XCTAssertNil(error.reason)
+            }
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func test_requestWithMultiPartFormData_WithValidRequest_Returns_Success()
+    {
+        // ARRANGE
+        let expectation = XCTestExpectation(description: "Multipart form data test")
+        let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/api/Employee/MultiPartCodeChallenge")
+
+        let multiPartFormRequest = MultiPartFormRequest(name: "Bruce", lastName: "Wayne", gender: "Male", departmentName: "Tech", managerName: "James Gordan", dateOfJoining: "01-09-2020", dateOfBirth: "07-07-1988")
+
+        let multiPartRequest = HUMultiPartRequest(url: requestUrl!, method: .post, request: multiPartFormRequest)
+
+        // ACT
+        _utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, responseType: MultiPartResponse.self) { (response) in
+            // ASSERT
+            switch response
+            {
+            case .success(let serviceResponse):
+
+                // ASSERT
+                XCTAssertNotNil(serviceResponse)
+                XCTAssertNotNil(serviceResponse?.data)
+
+            case .failure(let error):
+                XCTAssertNil(error.reason)
+            }
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func test_requestWithMultiPartFormData_WithMediaImage_Returns_Success()
+    {
+        // ARRANGE
+        let expectation = XCTestExpectation(description: "Multipart form data test media upload")
+        let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/api/Image/UploadImageMultiPartForm")
+        let testImageFile = Bundle(for: type(of: self)).path(forResource: "batman", ofType: ".jpg")
+        let imageData = UIImage(contentsOfFile: testImageFile!)?.jpegData(compressionQuality: 0.7)
+
+        let fileUploadRequest = MultiPartFormFileUploadRequest(attachment: imageData!, fileName: "utilityTest")
+
+        let multiPartRequest = HUMultiPartRequest(url: requestUrl!, method: .post, request: fileUploadRequest)
+
+        // ACT
+        _utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, responseType: MultiPartImageUploadResponse.self) { (response) in
+            // ASSERT
+            switch response
+            {
+            case .success(let serviceResponse):
+
+                // ASSERT
+                XCTAssertNotNil(serviceResponse)
+                XCTAssertNotNil(serviceResponse?.path)
+
+            case .failure(let error):
+                XCTAssertNil(error.reason)
+            }
+            expectation.fulfill()
         }
 
         wait(for: [expectation], timeout: 10.0)

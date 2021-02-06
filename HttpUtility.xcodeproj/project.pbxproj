@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		86277C2024CB399B0078EB37 /* LazyImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86277C1F24CB399B0078EB37 /* LazyImageView.swift */; };
+		86010D0725CE240300A4E362 /* batman.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 86010D0625CE240300A4E362 /* batman.jpg */; };
+		86521B5625C6FD7200E05422 /* HURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86521B5525C6FD7100E05422 /* HURequest.swift */; };
 		8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC572483E3C60023549D /* EncodableExtension.swift */; };
 		8656BC5B2483E43D0023549D /* EncodableExtensionUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC5A2483E43D0023549D /* EncodableExtensionUnitTest.swift */; };
 		8656BC5E2484313F0023549D /* HttpUtilityIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC5D2484313F0023549D /* HttpUtilityIntegrationTests.swift */; };
@@ -31,7 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		86277C1F24CB399B0078EB37 /* LazyImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyImageView.swift; sourceTree = "<group>"; };
+		86010D0625CE240300A4E362 /* batman.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = batman.jpg; sourceTree = "<group>"; };
+		86521B5525C6FD7100E05422 /* HURequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HURequest.swift; sourceTree = "<group>"; };
 		8656BC572483E3C60023549D /* EncodableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodableExtension.swift; sourceTree = "<group>"; };
 		8656BC5A2483E43D0023549D /* EncodableExtensionUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodableExtensionUnitTest.swift; sourceTree = "<group>"; };
 		8656BC5D2484313F0023549D /* HttpUtilityIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpUtilityIntegrationTests.swift; sourceTree = "<group>"; };
@@ -70,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				8656BC572483E3C60023549D /* EncodableExtension.swift */,
-				86277C1F24CB399B0078EB37 /* LazyImageView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -123,6 +124,7 @@
 			children = (
 				86CAEFE525BBBE98006A7791 /* HUNetworkError.swift */,
 				86CAEFE925BBBEDE006A7791 /* HUHttpMethods.swift */,
+				86521B5525C6FD7100E05422 /* HURequest.swift */,
 				8656BC562483E3B20023549D /* Extensions */,
 				86719E9924720BD1002A2AB0 /* HttpUtility.h */,
 				86719E9A24720BD1002A2AB0 /* Info.plist */,
@@ -134,6 +136,7 @@
 		86719EA324720BD1002A2AB0 /* HttpUtilityTests */ = {
 			isa = PBXGroup;
 			children = (
+				86010D0625CE240300A4E362 /* batman.jpg */,
 				8656BC5F248495620023549D /* TestModel */,
 				8656BC5C248431200023549D /* IntegrationTests */,
 				8656BC592483E4200023549D /* ExtensionsTests */,
@@ -242,6 +245,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86010D0725CE240300A4E362 /* batman.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,9 +257,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				86CAEFE625BBBE98006A7791 /* HUNetworkError.swift in Sources */,
-				86277C2024CB399B0078EB37 /* LazyImageView.swift in Sources */,
 				86719EB124720E40002A2AB0 /* HttpUtility.swift in Sources */,
 				8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */,
+				86521B5625C6FD7200E05422 /* HURequest.swift in Sources */,
 				86CAEFEA25BBBEDE006A7791 /* HUHttpMethods.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

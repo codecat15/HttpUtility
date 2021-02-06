@@ -16,26 +16,31 @@ public struct HttpUtility
 
     private init(){}
     
-    public func request<T:Decodable>(requestUrl: URL, method: HUHttpMethods, requestBody: Data? = nil,  resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
+    public func request<T:Decodable>(huRequest: HURequest, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
-        switch method
+        switch huRequest.method
         {
         case .get:
-            getData(requestUrl: requestUrl, resultType: resultType) { completionHandler($0)}
+            getData(requestUrl: huRequest.url, resultType: resultType) { completionHandler($0)}
             break
 
         case .post:
-            postData(requestUrl: requestUrl, requestBody: requestBody!, resultType: T.self) { completionHandler($0)}
+            postData(request: huRequest, resultType: resultType) { completionHandler($0)}
             break
 
         case .put:
-            putData(requestUrl: requestUrl, resultType: resultType) { completionHandler($0)}
+            putData(requestUrl: huRequest.url, resultType: resultType) { completionHandler($0)}
             break
 
         case .delete:
-            deleteData(requestUrl: requestUrl, resultType: resultType) { completionHandler($0)}
+            deleteData(requestUrl: huRequest.url, resultType: resultType) { completionHandler($0)}
             break
         }
+    }
+
+    // MARK: - Multipart
+    public func requestWithMultiPartFormData<T:Decodable>(multiPartRequest: HUMultiPartRequest, responseType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void) {
+        postMultiPartFormData(request: multiPartRequest) { completionHandler($0) }
     }
 
     // MARK: - Private functions
@@ -61,9 +66,9 @@ public struct HttpUtility
     private func decodeJsonResponse<T: Decodable>(data: Data, responseType: T.Type) -> T?
     {
         let decoder = createJsonDecoder()
-        do{
+        do {
             return try decoder.decode(responseType, from: data)
-        }catch let error{
+        }catch let error {
             debugPrint("deocding error =>\(error.localizedDescription)")
         }
         return nil
@@ -81,11 +86,11 @@ public struct HttpUtility
     }
 
     // MARK: - POST Api
-    private func postData<T:Decodable>(requestUrl: URL, requestBody: Data, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
+    private func postData<T:Decodable>(request: HURequest, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
-        var urlRequest = self.createUrlRequest(requestUrl: requestUrl)
+        var urlRequest = self.createUrlRequest(requestUrl: request.url)
         urlRequest.httpMethod = HUHttpMethods.post.rawValue
-        urlRequest.httpBody = requestBody
+        urlRequest.httpBody = request.requestBody
         urlRequest.addValue("application/json", forHTTPHeaderField: "content-type")
 
         performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
@@ -93,6 +98,52 @@ public struct HttpUtility
         }
     }
 
+    private func postMultiPartFormData<T:Decodable>(request: HUMultiPartRequest, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
+    {
+        let boundary = "-----------------------------\(UUID().uuidString)"
+        let lineBreak = "\r\n"
+        var urlRequest = self.createUrlRequest(requestUrl: request.url)
+        urlRequest.httpMethod = HUHttpMethods.post.rawValue
+        urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        var postBody = Data()
+
+        let requestDictionary = request.request.convertToDictionary()
+        if(requestDictionary != nil)
+        {
+            requestDictionary?.forEach({ (key, value) in
+                if(value != nil) {
+                    let strValue = value.map { String(describing: $0) }
+                    if(strValue != nil && strValue?.count != 0) {
+                        postBody.append("--\(boundary + lineBreak)" .data(using: .utf8)!)
+                        postBody.append("Content-Disposition: form-data; name=\"\(key)\" \(lineBreak + lineBreak)" .data(using: .utf8)!)
+                        postBody.append("\(strValue! + lineBreak)".data(using: .utf8)!)
+                    }
+                }
+            })
+
+            // TODO: Next release 
+//            if(huRequest.media != nil) {
+//                huRequest.media?.forEach({ (media) in
+//                    postBody.append("--\(boundary + lineBreak)" .data(using: .utf8)!)
+//                    postBody.append("Content-Disposition: form-data; name=\"\(media.parameterName)\"; filename=\"\(media.fileName)\" \(lineBreak + lineBreak)" .data(using: .utf8)!)
+//                    postBody.append("Content-Type: \(media.mimeType + lineBreak + lineBreak)" .data(using: .utf8)!)
+//                    postBody.append(media.data)
+//                    postBody.append(lineBreak .data(using: .utf8)!)
+//                })
+//            }
+            
+            postBody.append("--\(boundary)--\(lineBreak)" .data(using: .utf8)!)
+
+            urlRequest.addValue("\(postBody.count)", forHTTPHeaderField: "Content-Length")
+            urlRequest.httpBody = postBody
+
+            performOperation(requestUrl: urlRequest, responseType: T.self) { (result) in
+                completionHandler(result)
+            }
+        }
+    }
+    
     // MARK: - PUT Api
     private func putData<T:Decodable>(requestUrl: URL, resultType: T.Type, completionHandler:@escaping(Result<T?, HUNetworkError>)-> Void)
     {
@@ -121,21 +172,16 @@ public struct HttpUtility
         URLSession.shared.dataTask(with: requestUrl) { (data, httpUrlResponse, error) in
 
             let statusCode = (httpUrlResponse as? HTTPURLResponse)?.statusCode
-            if(error == nil && data != nil && data?.count != 0)
-            {
+            if(error == nil && data != nil && data?.count != 0) {
                 let response = self.decodeJsonResponse(data: data!, responseType: responseType)
-
-                if(response != nil){
+                if(response != nil) {
                     completionHandler(.success(response))
                 }else {
-
-                    let responseJsonString = String(data: data!, encoding: .utf8)
-                    completionHandler(.failure(HUNetworkError(reason: "response decoding error = \(String(describing: responseJsonString))", httpStatusCode: statusCode)))
+                    completionHandler(.failure(HUNetworkError(withServerResponse: data, forRequestUrl: requestUrl.url!, withHttpBody: requestUrl.httpBody, errorMessage: error.debugDescription, forStatusCode: statusCode!)))
                 }
             }
-            else
-            {
-                let networkError = HUNetworkError(reason: error.debugDescription,httpStatusCode: statusCode)
+            else {
+                let networkError = HUNetworkError(withServerResponse: data, forRequestUrl: requestUrl.url!, withHttpBody: requestUrl.httpBody, errorMessage: error.debugDescription, forStatusCode: statusCode!)
                 completionHandler(.failure(networkError))
             }
 

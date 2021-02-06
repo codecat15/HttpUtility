@@ -45,6 +45,17 @@ struct Phone: Decodable {
     let name, operatingSystem, manufacturer, color: String?
 }
 
+// MARK: - DataClass
+struct TestMultiPartResponse: Decodable {
+    let errorMessage: String
+    let data: DataClass
+}
+
+// MARK: - DataClass
+struct DataClass: Decodable {
+    let name, lastName: String
+}
+
 // MARK: - MultiPartResponse
 struct MultiPartResponse: Decodable {
     let errorMessage: String?
@@ -98,4 +109,9 @@ struct Headers: Decodable {
         case userAgent
         case xAmznTraceID
     }
+}
+
+// MARK: - Multipart image upload model
+struct MultiPartImageUploadResponse : Decodable {
+    let path : String
 }
