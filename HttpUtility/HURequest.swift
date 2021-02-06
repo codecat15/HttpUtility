@@ -17,6 +17,12 @@ public struct HURequest : Request {
     var url: URL
     var method: HUHttpMethods
     var requestBody: Data? = nil
+
+    init(withUrl url: URL, forHttpMethod method: HUHttpMethods, requestBody: Data? = nil) {
+        self.url = url
+        self.method = method
+        self.requestBody = requestBody != nil ? requestBody : nil
+    }
 }
 
 // the HUMedia will be part of next release

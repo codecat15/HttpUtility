@@ -25,7 +25,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ARRANGE
         let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
         let expectation = XCTestExpectation(description: "Data received from server")
-        let request = HURequest(url: requestUrl!, method: .get)
+        let request = HURequest(withUrl: requestUrl!, forHttpMethod: .get)
 
         _utility.request(huRequest: request, resultType: Employees.self) { (response) in
             switch response
@@ -56,8 +56,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let registerUserBody = try! JSONEncoder().encode(registerUserRequest)
         let expectation = XCTestExpectation(description: "Data received from server")
 
-        let request = HURequest(url: requestUrl!, method: .post, requestBody: registerUserBody)
-
+        let request = HURequest(withUrl: requestUrl!, forHttpMethod: .post, requestBody: registerUserBody)
         // ACT
         _utility.request(huRequest: request, resultType: RegisterResponse.self) { (response) in
             switch response
@@ -84,7 +83,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Data received from server")
         let request = PhoneRequest(color: "Red", manufacturer: nil)
         let requestUrl = request.convertToQueryStringUrl(urlString:"https://api-dev-scus-demo.azurewebsites.net/api/Product/GetSmartPhone")
-        let huRequest = HURequest(url: requestUrl!, method: .get)
+        let huRequest = HURequest(withUrl: requestUrl!, forHttpMethod: .get)
 
         // ACT
         _utility.request(huRequest: huRequest, resultType: PhoneResponse.self) { (response) in
@@ -114,7 +113,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ARRANGE
         let expectation = XCTestExpectation(description: "Data received from server")
         let requestUrl = URL(string: "https://httpbin.org/put")
-        let huRequest = HURequest(url: requestUrl!, method: .put)
+        let huRequest = HURequest(withUrl: requestUrl!, forHttpMethod: .put)
 
         // ACT
         _utility.request(huRequest: huRequest, resultType: Response.self) { (response) in
@@ -141,7 +140,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         // ARRANGE
         let expectation = XCTestExpectation(description: "Data received from server")
         let requestUrl = URL(string: "https://httpbin.org/delete")
-        let huRequest = HURequest(url: requestUrl!, method: .delete)
+        let huRequest = HURequest(withUrl: requestUrl!, forHttpMethod: .delete)
 
         // ACT
         _utility.request(huRequest: huRequest, resultType: Response.self) { (response) in
