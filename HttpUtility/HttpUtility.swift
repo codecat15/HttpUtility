@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct HttpUtility
+public class HttpUtility
 {
     static let shared = HttpUtility()
     public var authenticationToken : String? = nil
