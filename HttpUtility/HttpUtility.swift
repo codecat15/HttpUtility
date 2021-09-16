@@ -10,7 +10,7 @@ import Foundation
 
 public class HttpUtility
 {
-    static let shared = HttpUtility()
+    public static let shared = HttpUtility()
     public var authenticationToken : String? = nil
     public var customJsonDecoder : JSONDecoder? = nil
 
