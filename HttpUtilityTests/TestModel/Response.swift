@@ -8,19 +8,16 @@
 
 import Foundation
 
-// MARK: - EmployeeResponse
-struct EmployeeResponse: Decodable {
-    let id: Int?
-    let name, role, joiningDate: String?
-    let depID, salary: Int?
-    let workPhone: String?
+// MARK: - AnimalResponse
+struct AnimalResponse: Decodable {
+    let errorMessage: String?
+    let data: [Animal]?
+}
 
-    enum CodingKeys: String, CodingKey {
-        case id, name, role
-        case joiningDate = "joining_date"
-        case depID = "dep_id"
-        case salary, workPhone
-    }
+// MARK: - Datum
+struct Animal: Decodable {
+    let name: String
+    let image: String
 }
 
 // MARK: - RegisterResponse

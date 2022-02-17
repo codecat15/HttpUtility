@@ -8,14 +8,14 @@
 
 import Foundation
 
-protocol Request {
+public protocol Request {
     var url: URL { get set }
     var method: HUHttpMethods {get set}
 }
 
 public struct HURequest : Request {
-    var url: URL
-    var method: HUHttpMethods
+    public var url: URL
+    public var method: HUHttpMethods
     var requestBody: Data? = nil
 
     init(withUrl url: URL, forHttpMethod method: HUHttpMethods, requestBody: Data? = nil) {
@@ -27,8 +27,8 @@ public struct HURequest : Request {
 
 // the HUMedia will be part of next release
 public struct HUMultiPartRequest : Request {
-    var url: URL
-    var method: HUHttpMethods
+    public var url: URL
+    public var method: HUHttpMethods
     var request : Encodable
     //var media : [HUMedia]? = nil
 }
