@@ -69,7 +69,7 @@ public class HttpUtility
         do {
             return try decoder.decode(responseType, from: data)
         }catch let error {
-            debugPrint("deocding error =>\(error.localizedDescription)")
+            debugPrint("error while decoding JSON response =>\(error.localizedDescription)")
         }
         return nil
     }

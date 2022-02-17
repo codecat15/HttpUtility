@@ -9,32 +9,30 @@
 import XCTest
 @testable import HttpUtility
 
-
-struct MyStruct : Encodable
+struct MultiPartPostRequest : Encodable
 {
     let name, lastName: String
 }
 
 class HttpUtilityIntegrationTests: XCTestCase {
 
-    private typealias Employees = [EmployeeResponse]
     private let _utility = HttpUtility.shared
 
     func test_getApiData_With_Valid_Request_Returns_Success()
     {
         // ARRANGE
-        let requestUrl = URL(string: "http://demo0333988.mockable.io/Employees")
+        let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/api/Animal/GetAnimals")
         let expectation = XCTestExpectation(description: "Data received from server")
         let request = HURequest(withUrl: requestUrl!, forHttpMethod: .get)
 
-        _utility.request(huRequest: request, resultType: Employees.self) { (response) in
+        _utility.request(huRequest: request, resultType: AnimalResponse.self) { (response) in
             switch response
             {
-            case .success(let employee):
+            case .success(let animal):
 
                 // ASSERT
-                XCTAssertNotNil(employee)
-                XCTAssertTrue(employee?.count == 2)
+                XCTAssertNotNil(animal)
+                XCTAssertNotNil(animal?.data)
 
             case .failure(let error):
 
@@ -168,7 +166,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Multipart form data test")
         let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/TestMultiPart")
 
-        let myStruct = MyStruct(name: "Bruce", lastName: "Wayne")
+        let myStruct = MultiPartPostRequest(name: "Bruce", lastName: "Wayne")
         let multiPartRequest = HUMultiPartRequest(url: requestUrl!, method: .post, request: myStruct)
         
         // ACT
