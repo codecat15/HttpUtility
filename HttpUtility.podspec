@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "HttpUtility"
-  spec.version      = “1.2.4”
+  spec.version      = "1.2.4"
   spec.summary      = "HttpUtility is helpful in making HTTP requests in iOS application"
 
   # This description is used to generate tags and improve search results.
@@ -25,8 +25,8 @@ Pod::Spec.new do |spec|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   spec.description  = <<-DESC
-                   HttpUtility is an open source MIT license project which is helpful in making HTTP requests and parsing the JSON response received from server
-                   DESC
+                      HttpUtility is an open source MIT license project which is helpful in making HTTP requests and parsing the JSON response received from server
+                      DESC
 
   spec.homepage     = "https://github.com/codecat15/HttpUtility"
   # spec.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
@@ -38,9 +38,7 @@ Pod::Spec.new do |spec|
   #  CocoaPods will detect a license file if there is a named LICENSE*
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
-
-  spec.license      = { :type => "MIT", :file => "LICENSE" }
-  # spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
+   spec.license      = { :type => "MIT", :file => "LICENSE" }
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
