@@ -167,7 +167,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
         let requestUrl = URL(string: "https://api-dev-scus-demo.azurewebsites.net/TestMultiPart")
 
         let myStruct = MultiPartPostRequest(name: "Bruce", lastName: "Wayne")
-        let multiPartRequest = HUMultiPartRequest(url: requestUrl!, method: .post, request: myStruct)
+        let multiPartRequest = HUMultiPartRequest(withUrl: requestUrl!, forHttpMethod: .post, requestBody: myStruct)
         
         // ACT
         _utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, responseType: TestMultiPartResponse.self) { (response) in
@@ -198,7 +198,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
 
         let multiPartFormRequest = MultiPartFormRequest(name: "Bruce", lastName: "Wayne", gender: "Male", departmentName: "Tech", managerName: "James Gordan", dateOfJoining: "01-09-2020", dateOfBirth: "07-07-1988")
 
-        let multiPartRequest = HUMultiPartRequest(url: requestUrl!, method: .post, request: multiPartFormRequest)
+        let multiPartRequest = HUMultiPartRequest(withUrl: requestUrl!, forHttpMethod: .post, requestBody: multiPartFormRequest)
 
         // ACT
         _utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, responseType: MultiPartResponse.self) { (response) in
@@ -230,7 +230,7 @@ class HttpUtilityIntegrationTests: XCTestCase {
 
         let fileUploadRequest = MultiPartFormFileUploadRequest(attachment: imageData!, fileName: "utilityTest")
 
-        let multiPartRequest = HUMultiPartRequest(url: requestUrl!, method: .post, request: fileUploadRequest)
+        let multiPartRequest = HUMultiPartRequest(withUrl: requestUrl!, forHttpMethod: .post, requestBody: fileUploadRequest)
 
         // ACT
         _utility.requestWithMultiPartFormData(multiPartRequest: multiPartRequest, responseType: MultiPartImageUploadResponse.self) { (response) in
