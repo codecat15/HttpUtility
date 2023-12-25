@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8280CC552B39647B0014F1D6 /* HttpRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280CC542B39647B0014F1D6 /* HttpRequestHandler.swift */; };
 		86010D0725CE240300A4E362 /* batman.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 86010D0625CE240300A4E362 /* batman.jpg */; };
 		86521B5625C6FD7200E05422 /* HURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86521B5525C6FD7100E05422 /* HURequest.swift */; };
 		8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656BC572483E3C60023549D /* EncodableExtension.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8280CC542B39647B0014F1D6 /* HttpRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpRequestHandler.swift; sourceTree = "<group>"; };
 		86010D0625CE240300A4E362 /* batman.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = batman.jpg; sourceTree = "<group>"; };
 		86521B5525C6FD7100E05422 /* HURequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HURequest.swift; sourceTree = "<group>"; };
 		8656BC572483E3C60023549D /* EncodableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodableExtension.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				86719E9924720BD1002A2AB0 /* HttpUtility.h */,
 				86719E9A24720BD1002A2AB0 /* Info.plist */,
 				86719EB024720E40002A2AB0 /* HttpUtility.swift */,
+				8280CC542B39647B0014F1D6 /* HttpRequestHandler.swift */,
 			);
 			path = HttpUtility;
 			sourceTree = "<group>";
@@ -258,6 +261,7 @@
 			files = (
 				86CAEFE625BBBE98006A7791 /* HUNetworkError.swift in Sources */,
 				86719EB124720E40002A2AB0 /* HttpUtility.swift in Sources */,
+				8280CC552B39647B0014F1D6 /* HttpRequestHandler.swift in Sources */,
 				8656BC582483E3C60023549D /* EncodableExtension.swift in Sources */,
 				86521B5625C6FD7200E05422 /* HURequest.swift in Sources */,
 				86CAEFEA25BBBEDE006A7791 /* HUHttpMethods.swift in Sources */,
